@@ -1,0 +1,916 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility Reports | BreakFix</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1e293b;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 245px;
+            height: 100vh;
+            background: #111827;
+            color: white;
+            padding: 25px 17px;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            padding: 0 12px 28px;
+        }
+
+        .logo i {
+            color: #60a5fa;
+            margin-right: 8px;
+        }
+
+        .profile {
+            background: #1f2937;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile small {
+            display: block;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+
+        .profile strong {
+            font-size: 14px;
+        }
+
+        .nav-title {
+            color: #9ca3af;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 12px;
+            margin-bottom: 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 14px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 14px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .logout {
+            color: #fca5a5;
+        }
+
+        .logout:hover {
+            background: #7f1d1d;
+            color: white;
+        }
+
+        .main {
+            margin-left: 245px;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            margin: 0 0 7px;
+            font-size: 27px;
+        }
+
+        .topbar p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .admin-tag {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 9px 13px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .welcome {
+            background: linear-gradient(120deg, #1d4ed8, #2563eb, #3b82f6);
+            color: white;
+            padding: 27px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            margin: 0 0 9px;
+            font-size: 23px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #dbeafe;
+            line-height: 1.5;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 21px;
+            border-radius: 13px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 10px #0f172a08;
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            font-size: 20px;
+        }
+
+        .blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px #0f172a08;
+        }
+
+        .panel-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .panel-header h2 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .panel-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        .reports-table {
+            width: 100%;
+            min-width: 1250px;
+            border-collapse: collapse;
+        }
+
+        .reports-table th,
+        .reports-table td {
+            padding: 16px 17px;
+            text-align: left;
+            vertical-align: middle;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 13px;
+        }
+
+        .reports-table th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+
+        .reports-table td strong {
+            color: #111827;
+        }
+
+        .assign-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 165px;
+        }
+
+        .assign-form select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            background: white;
+            color: #334155;
+            font-size: 12px;
+        }
+
+        .assign-form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .assign-form button:hover {
+            background: #1d4ed8;
+        }
+
+        .photo-link {
+            color: #2563eb;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .photo-link:hover {
+            text-decoration: underline;
+        }
+
+        .no-photo {
+            color: #94a3b8;
+            font-style: italic;
+            white-space: nowrap;
+        }
+
+        .assigned-info {
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .date-cell {
+            min-width: 130px;
+            white-space: nowrap;
+        }
+
+        .muted {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .priority-high,
+        .priority-urgent {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #d97706;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-new,
+        .status-under-review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-assigned {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-in-progress,
+        .status-waiting-for-parts {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .empty {
+            padding: 40px;
+            text-align: center !important;
+            color: #64748b;
+        }
+
+        .empty i {
+            display: block;
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            padding: 10px;
+        }
+
+         
+/* =========================
+   LOGOUT CONFIRMATION MODAL
+========================= */
+
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    background: rgba(5, 12, 28, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logout-modal.show {
+    display: flex;
+}
+
+.logout-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 30px;
+
+    border: 2px solid transparent;
+    border-radius: 24px;
+
+    background:
+        linear-gradient(#111827, #111827) padding-box,
+        linear-gradient(
+            135deg,
+            #a855f7,
+            #ec4899,
+            #06b6d4,
+            #facc15,
+            #a855f7
+        ) border-box;
+
+    background-size: auto, 300% 300%;
+    animation: logoutBorderGlow 6s ease infinite,
+               logoutModalPop 0.25s ease-out;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    text-align: center;
+}
+
+@keyframes logoutBorderGlow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
+
+@keyframes logoutModalPop {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.logout-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+
+    border-radius: 18px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+
+    color: #60a5fa;
+    font-size: 29px;
+}
+
+.logout-modal-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    font-weight: 750;
+}
+
+.logout-modal-content p {
+    margin: 0 0 25px;
+    color: #9caec6;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.logout-buttons button,
+.logout-buttons a {
+    flex: 1;
+    min-height: 46px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+
+    padding: 12px 10px;
+    border-radius: 12px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.logout-buttons .cancel-btn {
+    border: 1px solid #334155;
+    background: #111b2b;
+    color: #cbd5e1;
+}
+
+.logout-buttons .cancel-btn:hover {
+    border-color: #64748b;
+    background: #1e293b;
+}
+
+.logout-buttons .confirm-logout-btn {
+    border: none;
+    background: #2864ed;
+    color: #ffffff;
+}
+
+.logout-buttons .confirm-logout-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 20px rgba(37, 99, 235, 0.25);
+}
+
+.logout-buttons button:focus-visible,
+.logout-buttons a:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .logout-modal-content {
+        padding: 28px 22px;
+        border-radius: 21px;
+    }
+
+    .logout-modal-content h2 {
+        font-size: 22px;
+    }
+
+    .logout-buttons {
+        gap: 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logout-modal-content {
+        animation: none;
+    }
+
+    .logout-buttons button,
+    .logout-buttons a {
+        transition: none;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <!-- BreakFix Loading Screen -->
+    <div id="breakfix-loader">
+        <div class="breakfix-loader-logo">
+            <div class="breakfix-loader-ring"></div>
+            <div class="loader-icon">
+                <i class="bi bi-tools"></i>
+            </div>
+        </div>
+
+        <h2 class="breakfix-loader-title">BreakFix</h2>
+        <div class="breakfix-loader-bar"></div>
+        <p class="breakfix-loader-text">Loading BreakFix...</p>
+
+        <div class="breakfix-loader-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="bi bi-tools"></i>BreakFix
+        </div>
+
+        <div class="profile">
+            <small>Logged in as Admin</small>
+            <strong>{{ fullname }}</strong>
+        </div>
+
+        <div class="nav-title">Administration</div>
+
+        <nav>
+            <a href="/admin-dashboard" class="nav-link">
+                <i class="bi bi-grid-1x2"></i> Dashboard
+            </a>
+
+            <a href="/admin/facility-reports" class="nav-link active">
+                <i class="bi bi-clipboard-data"></i> Facility Reports
+            </a>
+
+            <a href="/admin/lost-found" class="nav-link">
+                <i class="bi bi-search"></i> Lost &amp; Found
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a href="#" class="nav-link logout" onclick="openLogoutModal(event)">
+                <i class="bi bi-box-arrow-left"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h1>Facility Reports</h1>
+                <p>Manage workplace facility reports and maintenance assignments.</p>
+            </div>
+
+            <span class="admin-tag">
+                <i class="bi bi-shield-check"></i> Administrator
+            </span>
+        </header>
+
+        <section class="welcome">
+            <h2>Facility Reports Overview</h2>
+            <p>Review reports submitted by employees and monitor their progress.</p>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Reports</span>
+                    <span class="stat-icon blue">
+                        <i class="bi bi-clipboard-data"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ reports|length }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">New / Under Review</span>
+                    <span class="stat-icon orange">
+                        <i class="bi bi-hourglass-split"></i>
+                    </span>
+                </div>
+                <div class="stat-number">
+                    {{ reports|selectattr('status', 'in', ['NEW', 'UNDER REVIEW'])|list|length }}
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Assigned</span>
+                    <span class="stat-icon blue">
+                        <i class="bi bi-person-check"></i>
+                    </span>
+                </div>
+                <div class="stat-number">
+                    {{ reports|selectattr('status', 'equalto', 'ASSIGNED')|list|length }}
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-header">
+                <h2><i class="bi bi-clipboard-check"></i> Facility Reports</h2>
+                <p>Review reports, assign maintenance staff, and monitor facility problems.</p>
+            </div>
+
+            <div class="table-wrap">
+                <table class="reports-table">
+                    <thead>
+                        <tr>
+                            <th>Report Code</th>
+                            <th>Employee</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Priority</th>
+                            <th>Photo</th>
+                            <th>Status</th>
+                            <th>Assign Maintenance</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for report in reports %}
+                        {% set priority_class = (report.get('priority') or 'medium')|lower %}
+                        {% set status_class = (report.get('status') or 'NEW')|lower|replace(' ', '-') %}
+
+                        <tr>
+                            <td>
+                                <strong>{{ report.get('report_code') or 'N/A' }}</strong>
+                            </td>
+
+                            <td>
+                                <strong>{{ report.get('reporter_name') or 'Unknown' }}</strong>
+                            </td>
+
+                            <td>{{ report.get('category_name') or 'Other' }}</td>
+                            <td>{{ report.get('location') or 'N/A' }}</td>
+
+                            <td>
+                                <span class="priority-{{ priority_class }}">
+                                    {{ report.get('priority') or 'Medium' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if report.get('photo') %}
+                                    <a href="{{ report.get('photo') }}"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       class="photo-link">
+                                        <i class="bi bi-image"></i> View Photo
+                                    </a>
+                                {% else %}
+                                    <span class="no-photo">No photo</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="badge status-{{ status_class }}">
+                                    {{ report.get('status') or 'NEW' }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <form action="/admin/assign-maintenance"
+                                      method="POST"
+                                      class="assign-form">
+
+                                    <input type="hidden"
+                                           name="report_id"
+                                           value="{{ report.get('id') }}">
+
+                                    <select name="maintenance_id" required>
+                                        <option value="">Select Staff</option>
+
+                                        {% for staff in maintenance_users %}
+                                            <option value="{{ staff.id }}"
+                                                {% if report.get('assigned_to')|string == staff.id|string %}selected{% endif %}>
+                                                {{ staff.fullname }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <button type="submit">
+                                        <i class="bi bi-person-check"></i> Assign
+                                    </button>
+                                </form>
+
+                                <div class="assigned-info">
+                                    {% if report.get('assigned_name') and report.get('assigned_name') != 'Not assigned' %}
+                                        Assigned: {{ report.get('assigned_name') }}
+                                    {% else %}
+                                        Not assigned
+                                    {% endif %}
+                                </div>
+                            </td>
+
+                            <td class="date-cell">
+                                {% if report.get('created_at') %}
+                                    {{ report.get('created_at')[:10] }}
+                                    <div class="muted">
+                                        {{ report.get('created_at')[11:16] }}
+                                    </div>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="empty">
+                                <i class="bi bi-inbox"></i>
+                                <p>No facility reports found.</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="footer">
+            BreakFix · Workplace Facility Problem Reporting System
+        </div>
+    </main>
+
+     <!-- =========================
+         LOGOUT CONFIRMATION MODAL
+    ========================== -->
+    <div
+        id="logoutModal"
+        class="logout-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logoutTitle"
+        aria-describedby="logoutDescription"
+        aria-hidden="true"
+    >
+        <div class="logout-modal-content">
+
+            <div class="logout-icon">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+
+            <h2 id="logoutTitle">Confirm Logout</h2>
+
+            <p id="logoutDescription">
+                Are you sure you want to log out of your BreakFix account?
+            </p>
+
+            <div class="logout-buttons">
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeLogoutModal()"
+                >
+                    Cancel
+                </button>
+
+                <a href="/logout" class="confirm-logout-btn">
+                    Yes, Logout
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================
+         LOGOUT MODAL JAVASCRIPT
+    ========================== -->
+    <script>
+        const logoutModal = document.getElementById("logoutModal");
+
+        function openLogoutModal(event) {
+            event.preventDefault();
+
+            logoutModal.classList.add("show");
+            logoutModal.setAttribute("aria-hidden", "false");
+
+            const cancelButton = logoutModal.querySelector(".cancel-btn");
+            cancelButton.focus();
+        }
+
+        function closeLogoutModal() {
+            logoutModal.classList.remove("show");
+            logoutModal.setAttribute("aria-hidden", "true");
+        }
+
+        // Close when clicking outside the modal.
+        logoutModal.addEventListener("click", function(event) {
+            if (event.target === logoutModal) {
+                closeLogoutModal();
+            }
+        });
+
+        // Close when pressing Escape.
+        document.addEventListener("keydown", function(event) {
+            if (
+                event.key === "Escape" &&
+                logoutModal.classList.contains("show")
+            ) {
+                closeLogoutModal();
+            }
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+</body>
+</html>

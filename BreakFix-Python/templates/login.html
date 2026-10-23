@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BreakFix</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 30px 20px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #f8fafc;
+            background:
+                radial-gradient(ellipse at 15% 15%, rgba(37, 99, 235, 0.20), transparent 45%),
+                linear-gradient(115deg, #101d38, #0b1427 70%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            margin: auto;
+        }
+
+        .auth-scene {
+            width: 100%;
+            perspective: 1200px;
+        }
+
+        #card {
+            display: grid;
+            position: relative;
+            width: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(.2, .7, .2, 1);
+            align-items: start;
+        }
+
+        #card.signup-mode {
+            transform: rotateY(180deg);
+        }
+
+        .auth-face {
+            grid-area: 1 / 1;
+            width: 100%;
+            min-width: 0;
+            padding: 30px 34px;
+            border: 2px solid transparent;
+            border-radius: 24px;
+            background:
+                linear-gradient(#111827, #111827) padding-box,
+                conic-gradient(
+                    from var(--rgb-angle, 0deg),
+                    #00f2ff,
+                    #2563eb,
+                    #a855f7,
+                    #ec4899,
+                    #ff3030,
+                    #facc15,
+                    #00f2ff
+                ) border-box;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            animation: rgb-border 5s linear infinite;
+        }
+
+        .login-face {
+            transform: rotateY(0deg);
+        }
+
+        .register-face {
+            transform: rotateY(180deg);
+        }
+
+        @property --rgb-angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rgb-border {
+            to {
+                --rgb-angle: 360deg;
+            }
+        }
+
+        .brand-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2563eb;
+            border-radius: 17px;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .error-message {
+            background: #451a1a;
+            color: #fecaca;
+            border: 1px solid #7f1d1d;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            height: 47px;
+            padding: 0 44px;
+            background: #111827;
+            border: 1px solid #303b4f;
+            border-radius: 12px;
+            outline: none;
+            color: #f8fafc;
+            font-family: inherit;
+            font-size: 13px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #64748b;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.13);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 17px;
+            pointer-events: none;
+        }
+
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none !important;
+        }
+
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden !important;
+            display: none !important;
+            pointer-events: none !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            width: 25px;
+            height: 30px;
+            background: transparent;
+            border: none;
+            outline: none;
+            box-shadow: none;
+            color: #64748b;
+            cursor: pointer;
+            font-size: 17px;
+            appearance: none;
+        }
+
+        .toggle-password:hover {
+            color: #60a5fa;
+        }
+
+        .toggle-password i {
+            pointer-events: none;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 2px 0 21px;
+            font-size: 11px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #cbd5e1;
+            cursor: pointer;
+        }
+
+        .remember input {
+            accent-color: #2563eb;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #93c5fd;
+            text-decoration: none;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: pointer;
+        }
+
+        .forgot-password:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .login-button {
+            width: 100%;
+            min-height: 46px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            border: none;
+            border-radius: 12px;
+            background: #2563eb;
+            color: #fff;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .login-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .register-text {
+            border-top: 1px solid #293447;
+            text-align: center;
+            margin-top: 21px;
+            padding-top: 18px;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .switch-button {
+            color: #60a5fa;
+            font-weight: bold;
+            text-decoration: none;
+            margin-left: 4px;
+            background: transparent;
+            border: none;
+            font-family: inherit;
+            font-size: inherit;
+            cursor: pointer;
+        }
+
+        .switch-button:hover {
+            color: #bfdbfe;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 18px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 20px 15px;
+            }
+
+            .auth-face {
+                padding: 28px 23px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-height: 650px) {
+            body {
+                align-items: flex-start;
+            }
+
+            .login-container {
+                margin: auto;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #card {
+                transition: none;
+            }
+
+            .auth-face {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+    <div class="auth-scene">
+        <div id="card">
+
+            <!-- LOGIN SIDE -->
+            <section class="auth-face login-face">
+
+                <div class="brand-icon" aria-hidden="true">
+                    <i class="bi bi-tools"></i>
+                </div>
+
+                <h1>Welcome Back</h1>
+
+                <p class="subtitle">
+                    Sign in to access your BreakFix workspace
+                </p>
+
+                {% if error %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <form id="loginForm" action="{{ url_for('login') }}" method="POST">
+
+                    <div class="input-group">
+                        <label for="email">Work Email</label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope input-icon"></i>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="name@company.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">Password</label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-toggle="password"
+                                aria-label="Show password"
+                                title="Show password"
+                            >
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="remember">
+                            <input type="checkbox" name="remember_me">
+                            Remember Me
+                        </label>
+
+                        <a
+                            href="{{ url_for('forgot_password') }}"
+                            class="forgot-password"
+                        >Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Sign In to Portal
+                    </button>
+
+                </form>
+
+                <p class="register-text">
+                    Don't have an account yet?
+                    <button
+                        type="button"
+                        id="showSignup"
+                        class="switch-button"
+                    >Create Account</button>
+                </p>
+
+            </section>
+
+            <!-- REGISTER SIDE -->
+            <section class="auth-face register-face">
+
+                <div class="brand-icon" aria-hidden="true">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+
+                <h1>Create Account</h1>
+
+                <p class="subtitle">
+                    Join your BreakFix workplace workspace
+                </p>
+
+                {% if error %}
+                    <div class="error-message">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <form id="signupForm" action="{{ url_for('register') }}" method="POST">
+
+                    <div class="input-group">
+                        <label for="fullname">Full Name</label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-person input-icon"></i>
+                            <input
+                                type="text"
+                                id="fullname"
+                                name="fullname"
+                                placeholder="Enter your full name"
+                                autocomplete="name"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerEmail">Work Email</label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-envelope input-icon"></i>
+                            <input
+                                type="email"
+                                id="registerEmail"
+                                name="email"
+                                placeholder="name@company.com"
+                                autocomplete="email"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="signupPassword">Password</label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock input-icon"></i>
+                            <input
+                                type="password"
+                                id="signupPassword"
+                                name="password"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-toggle="signupPassword"
+                                aria-label="Show password"
+                                title="Show password"
+                            >
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirmPassword">Confirm Password</label>
+
+                        <div class="input-wrapper">
+                            <i class="bi bi-shield-lock input-icon"></i>
+                            <input
+                                type="password"
+                                id="confirmPassword"
+                                name="confirm_password"
+                                placeholder="Confirm your password"
+                                autocomplete="new-password"
+                                minlength="8"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                data-toggle="confirmPassword"
+                                aria-label="Show password"
+                                title="Show password"
+                            >
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        <i class="bi bi-person-check"></i>
+                        Create Account
+                    </button>
+
+                </form>
+
+                <p class="register-text">
+                    Already have an account?
+                    <button
+                        type="button"
+                        id="showLogin"
+                        class="switch-button"
+                    >Sign In</button>
+                </p>
+
+            </section>
+
+        </div>
+    </div>
+
+    <p class="footer">
+        © 2026 BreakFix · Workplace Support &amp; Facility System
+    </p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const card = document.getElementById("card");
+    const showSignup = document.getElementById("showSignup");
+    const showLogin = document.getElementById("showLogin");
+
+    // Switch between login and registration.
+    if (showSignup && card) {
+        showSignup.addEventListener("click", function () {
+            card.classList.add("signup-mode");
+        });
+    }
+
+    if (showLogin && card) {
+        showLogin.addEventListener("click", function () {
+            card.classList.remove("signup-mode");
+        });
+    }
+
+    // Show or hide passwords.
+    document.querySelectorAll("[data-toggle]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            const input = document.getElementById(button.dataset.toggle);
+            const icon = button.querySelector("i");
+
+            if (!input || !icon) return;
+
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+
+            icon.classList.toggle("bi-eye", !show);
+            icon.classList.toggle("bi-eye-slash", show);
+
+            button.setAttribute(
+                "aria-label",
+                show ? "Hide password" : "Show password"
+            );
+
+            button.title = show ? "Hide password" : "Show password";
+        });
+    });
+
+    // Validate registration password.
+    const signupForm = document.getElementById("signupForm");
+
+    if (signupForm) {
+        signupForm.addEventListener("submit", function (event) {
+            const password = document.getElementById("signupPassword");
+            const confirmPassword = document.getElementById("confirmPassword");
+
+            if (password.value.length < 8) {
+                event.preventDefault();
+                alert("Password must be at least 8 characters long.");
+                password.focus();
+                return;
+            }
+
+            if (password.value !== confirmPassword.value) {
+                event.preventDefault();
+                alert("Passwords do not match!");
+                confirmPassword.focus();
+            }
+        });
+    }
+
+});
+</script>
+
+<script>
+    // Disable right-click
+    document.addEventListener("contextmenu", function (event) {
+        event.preventDefault();
+    });
+
+    // Block common developer tool shortcuts
+    document.addEventListener("keydown", function (event) {
+        if (
+            event.key === "F12" ||
+            (event.ctrlKey && event.shiftKey &&
+                ["I", "J", "C"].includes(event.key.toUpperCase())) ||
+            (event.ctrlKey && event.key.toUpperCase() === "U")
+        ) {
+            event.preventDefault();
+        }
+    });
+</script>
+</body>
+</html>

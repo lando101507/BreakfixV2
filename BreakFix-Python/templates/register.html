@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - BreakFix</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 25px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #f8fafc;
+            background:
+                radial-gradient(ellipse at 15% 15%,
+                    rgba(37, 99, 235, 0.20), transparent 45%),
+                linear-gradient(115deg, #101d38, #0b1427 65%);
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .back-home {
+            display: inline-block;
+            margin-bottom: 18px;
+            color: #93c5fd;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .back-home:hover {
+            color: white;
+        }
+
+        .auth-card {
+            position: relative;
+            width: 100%;
+            padding: 34px;
+            border: 2px solid transparent;
+            border-radius: 24px;
+            background:
+                linear-gradient(#111827, #111827) padding-box,
+                conic-gradient(
+                    from var(--rgb-angle, 0deg),
+                    #00f2ff,
+                    #2563eb,
+                    #a855f7,
+                    #ec4899,
+                    #ff3030,
+                    #facc15,
+                    #00f2ff
+                ) border-box;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: rgb-border 5s linear infinite;
+        }
+
+        @property --rgb-angle {
+            syntax: "<angle>";
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rgb-border {
+            to {
+                --rgb-angle: 360deg;
+            }
+        }
+
+        .brand-icon {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 17px;
+            background: #2563eb;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.25);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-align: center;
+            color: white;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            margin-bottom: 27px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            margin-bottom: 18px;
+            padding: 12px;
+            border: 1px solid #7f1d1d;
+            border-radius: 10px;
+            background: #451a1a;
+            color: #fecaca;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .success-message {
+            margin-bottom: 18px;
+            padding: 12px;
+            border: 1px solid #166534;
+            border-radius: 10px;
+            background: #14532d;
+            color: #bbf7d0;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .input-group {
+            margin-bottom: 19px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            height: 46px;
+            padding: 0 43px 0 40px;
+            border: 1px solid #303b4f;
+            border-radius: 11px;
+            outline: none;
+            background: #0f172a;
+            color: #f8fafc;
+            font-family: inherit;
+            font-size: 13px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #64748b;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.13);
+        }
+
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            left: 13px;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 28px;
+            padding: 0;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            color: #94a3b8;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .toggle-password:hover {
+            color: #60a5fa;
+        }
+
+        .toggle-password:focus-visible {
+            outline: 2px solid #3b82f6;
+            outline-offset: 3px;
+            border-radius: 4px;
+        }
+
+        .main-button {
+            width: 100%;
+            height: 46px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 11px;
+            background: #2563eb;
+            color: white;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .main-button:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .main-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .main-button i {
+            margin-right: 7px;
+        }
+
+        .switch-text {
+            margin-top: 23px;
+            padding-top: 20px;
+            border-top: 1px solid #293447;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .switch-button {
+            border: none;
+            background: transparent;
+            color: #60a5fa;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .switch-button:hover {
+            color: #bfdbfe;
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 28px 22px;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .auth-card {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="auth-container">
+
+    <a href="/" class="back-home">
+        <i class="bi bi-arrow-left"></i> Back to Home
+    </a>
+
+    <main class="auth-card">
+
+        <div class="brand-icon">
+            <i class="bi bi-tools"></i>
+        </div>
+
+        <h1>Create Account</h1>
+
+        <p class="subtitle">
+            Join your BreakFix workplace workspace
+        </p>
+
+        {% if error %}
+            <div class="error-message" role="alert">
+                <i class="bi bi-exclamation-circle"></i>
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if success %}
+            <div class="success-message" role="status">
+                <i class="bi bi-check-circle"></i>
+                {{ success }}
+            </div>
+        {% endif %}
+
+        <form id="signupForm" action="/register" method="POST">
+
+            <div class="input-group">
+                <label for="fullname">Full Name</label>
+                <div class="input-wrapper">
+                    <i class="bi bi-person input-icon"></i>
+                    <input
+                        type="text"
+                        id="fullname"
+                        name="fullname"
+                        placeholder="Enter your full name"
+                        autocomplete="name"
+                        maxlength="100"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="registerEmail">Work Email</label>
+                <div class="input-wrapper">
+                    <i class="bi bi-envelope input-icon"></i>
+                    <input
+                        type="email"
+                        id="registerEmail"
+                        name="email"
+                        placeholder="name@company.com"
+                        autocomplete="email"
+                        maxlength="254"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="signupPassword">Password</label>
+                <div class="input-wrapper">
+                    <i class="bi bi-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        name="password"
+                        placeholder="Create a password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        data-toggle="signupPassword"
+                        aria-label="Show password"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-wrapper">
+                    <i class="bi bi-shield-lock input-icon"></i>
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirm_password"
+                        placeholder="Confirm your password"
+                        autocomplete="new-password"
+                        minlength="8"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        data-toggle="confirmPassword"
+                        aria-label="Show confirm password"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="main-button" id="registerButton">
+                <i class="bi bi-person-plus"></i>
+                Create Account
+            </button>
+
+        </form>
+
+        <p class="switch-text">
+            Already have an account?
+            <a href="/login"
+               class="switch-button"
+               style="text-decoration:none;">
+                Sign In
+            </a>
+        </p>
+
+    </main>
+
+    <p class="footer">
+        © 2026 BreakFix · Workplace Support &amp; Facility System
+    </p>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Show or hide password
+    document.querySelectorAll("[data-toggle]").forEach(function (button) {
+        button.addEventListener("click", function () {
+            const input = document.getElementById(button.dataset.toggle);
+            const icon = button.querySelector("i");
+
+            if (!input || !icon) return;
+
+            const show = input.type === "password";
+            input.type = show ? "text" : "password";
+
+            icon.classList.toggle("bi-eye", !show);
+            icon.classList.toggle("bi-eye-slash", show);
+
+            button.setAttribute(
+                "aria-label",
+                show ? "Hide password" : "Show password"
+            );
+        });
+    });
+
+    // Validate registration fields
+    const signupForm = document.getElementById("signupForm");
+
+    signupForm.addEventListener("submit", function (event) {
+        const fullname = document.getElementById("fullname");
+        const email = document.getElementById("registerEmail");
+        const password = document.getElementById("signupPassword");
+        const confirmPassword = document.getElementById("confirmPassword");
+
+        if (!fullname.value.trim()) {
+            event.preventDefault();
+            alert("Please enter your full name.");
+            fullname.focus();
+            return;
+        }
+
+        if (password.value.length < 8) {
+            event.preventDefault();
+            alert("Password must be at least 8 characters long.");
+            password.focus();
+            return;
+        }
+
+        if (password.value !== confirmPassword.value) {
+            event.preventDefault();
+            alert("Passwords do not match!");
+            confirmPassword.focus();
+            return;
+        }
+
+        if (!email.validity.valid) {
+            event.preventDefault();
+            alert("Please enter a valid email address.");
+            email.focus();
+        }
+    });
+
+});
+</script>
+</body>
+</html>

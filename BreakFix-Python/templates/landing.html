@@ -1,0 +1,1083 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BreakFix | Workplace Support Platform</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8fafc;
+            color: #111827;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .container {
+            width: 88%;
+            max-width: 1250px;
+            margin: auto;
+        }
+
+        /* NAVIGATION */
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            min-height: 78px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #111827;
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #2563eb;
+            color: white;
+            font-size: 23px;
+            box-shadow: 0 5px 12px #2563eb35;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 22px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .btn i {
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .btn-primary {
+            color: white;
+            background: #2563eb;
+            border: 1px solid #2563eb;
+            box-shadow: 0 5px 12px #2563eb30;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            color: #334155;
+            background: white;
+            border: 1px solid #cbd5e1;
+        }
+
+        .btn-outline:hover {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        /* HERO */
+        .hero {
+            padding: 80px 0 75px;
+            background: #f8fafc;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            align-items: center;
+            gap: 65px;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 15px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            border-radius: 30px;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 28px;
+        }
+
+        .live-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 4px #d1fae5;
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 5vw, 62px);
+            line-height: 1.06;
+            letter-spacing: -2px;
+            font-weight: 800;
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            display: block;
+            color: #2854e8;
+            background: linear-gradient(90deg, #2563eb, #4f46e5);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            color: #64748b;
+            font-size: 17px;
+            line-height: 1.85;
+            max-width: 590px;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        /* DASHBOARD PREVIEW */
+        .dashboard {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 25px 60px rgba(15, 23, 42, 0.12);
+        }
+
+        .dashboard-top {
+            background: #111827;
+            color: white;
+            padding: 17px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 7px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background: #ef4444; }
+        .dot-yellow { background: #f59e0b; }
+        .dot-green { background: #10b981; }
+
+        .dashboard-address {
+            font-size: 11px;
+            color: #cbd5e1;
+        }
+
+        .online-status {
+            font-size: 11px;
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .dashboard-body {
+            padding: 24px;
+            background: #f8fafc;
+        }
+
+        /* REPORT PREVIEW */
+        .report-preview {
+            background: white;
+            padding: 20px;
+            border: 1px solid #dbe3ef;
+            border-radius: 15px;
+            margin-top: 14px;
+        }
+
+        .report-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .report-heading h3 {
+            font-size: 13px;
+        }
+
+        .status {
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 9px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .assigned {
+            color: #6d28d9;
+            background: #ede9fe;
+        }
+
+        .claimed {
+            color: #047857;
+            background: #d1fae5;
+        }
+
+        .report-detail {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 10px;
+            line-height: 1.5;
+        }
+
+        .report-detail i {
+            margin-right: 2px;
+        }
+
+        .report-detail strong {
+            color: #475569;
+            font-weight: 500;
+        }
+
+        /* SECTIONS */
+        .section {
+            padding: 85px 0;
+            scroll-margin-top: 80px;
+        }
+
+        .section-heading {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 45px;
+        }
+
+        .section-heading h2 {
+            font-size: 34px;
+            margin-bottom: 14px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .feature-card {
+            padding: 30px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 17px;
+            transition: 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #93c5fd;
+            box-shadow: 0 12px 25px #0f172a0d;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            display: grid;
+            place-items: center;
+            background: #dbeafe;
+            color: #2563eb;
+            border-radius: 14px;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* HOW IT WORKS */
+        .how-section {
+            background: #eff6ff;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .step-card {
+            padding: 25px;
+            background: white;
+            border: 1px solid #dbeafe;
+            border-radius: 16px;
+        }
+
+        .step-number {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            border-radius: 12px;
+            margin-bottom: 18px;
+        }
+
+        .step-card h3 {
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* PORTALS */
+        .portals-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .portal-card {
+            padding: 28px;
+            text-align: center;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+        }
+
+        .portal-card h3 {
+            margin: 15px 0 10px;
+        }
+
+        .portal-card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        /* ABOUT */
+        .about-section {
+            background: white;
+        }
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 55px;
+        }
+
+        .about-label {
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .about-content h2 {
+            font-size: 35px;
+            line-height: 1.25;
+            margin: 14px 0 20px;
+        }
+
+        .about-content p {
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.9;
+            margin-bottom: 14px;
+        }
+
+        .about-panel {
+            padding: 35px;
+            background: linear-gradient(130deg, #2453e6, #4f7df5);
+            color: white;
+            border-radius: 22px;
+            box-shadow: 0 15px 35px #2563eb25;
+        }
+
+        .about-panel h3 {
+            font-size: 23px;
+            margin-bottom: 18px;
+        }
+
+        .about-panel p {
+            color: #eff6ff;
+            padding: 13px 0;
+            border-bottom: 1px solid #ffffff40;
+            margin: 0;
+        }
+
+        .about-panel p:last-child {
+            border-bottom: none;
+        }
+
+        .about-panel i {
+            margin-right: 8px;
+        }
+
+        /* CONTACT */
+        .contact-section {
+            background: #f1f5f9;
+        }
+
+        .contact-box {
+            max-width: 850px;
+            margin: auto;
+            padding: 45px 25px;
+            text-align: center;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+        }
+
+        .contact-box h2 {
+            font-size: 31px;
+            margin-bottom: 14px;
+        }
+
+        .contact-box p {
+            color: #64748b;
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        /* FOOTER */
+        footer {
+            background: #111827;
+            color: #cbd5e1;
+            padding: 27px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .footer-content strong {
+            color: white;
+            font-size: 19px;
+        }
+
+        .footer-content p {
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 950px) {
+            .hero-content {
+                gap: 30px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 720px) {
+            .container {
+                width: 92%;
+            }
+
+            .nav-content {
+                padding: 14px 0;
+                flex-wrap: wrap;
+            }
+
+            .nav-links {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 18px;
+            }
+
+            .nav-actions .btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .hero {
+                padding: 55px 0;
+            }
+
+            .hero-content,
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+            }
+
+            .dashboard {
+                margin-top: 15px;
+            }
+
+            .features-grid,
+            .portals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section {
+                padding: 60px 0;
+            }
+
+            .section-heading h2,
+            .about-content h2 {
+                font-size: 28px;
+            }
+
+            .footer-content {
+                justify-content: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .logo {
+                font-size: 19px;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-actions {
+                gap: 6px;
+            }
+
+            .hero h1 {
+                font-size: 37px;
+            }
+
+            .dashboard-body {
+                padding: 13px;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <header class="navbar">
+        <div class="container nav-content">
+
+            <a href="#home" class="logo">
+                <span class="logo-icon">
+                    <i class="bi bi-tools"></i>
+                </span>
+                BreakFix
+            </a>
+
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how">How It Works</a>
+                <a href="#portals">Portals</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="/login" class="btn btn-outline">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Sign In
+                </a>
+
+                <a href="/register" class="btn btn-primary">
+                    <i class="bi bi-person-plus-fill"></i>
+                    Get Started
+                </a>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="home">
+        <div class="container hero-content">
+
+            <div class="hero-text">
+
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    BreakFix Workplace System v2.0 · Live
+                </div>
+
+                <h1>
+                    Report it.<br>
+                    Track it.
+                    <span>Consider it Fixed.</span>
+                </h1>
+
+                <p class="hero-description">
+                    The modern workplace support platform that brings
+                    facility problem reporting, maintenance tracking,
+                    and lost and found item recovery under one clean,
+                    unified roof.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="/register" class="btn btn-primary">
+                        <i class="bi bi-person-plus-fill"></i>
+                        Create Free Account
+                    </a>
+
+                    <a href="/login" class="btn btn-outline">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Access Portal
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- DASHBOARD PREVIEW -->
+            <div class="dashboard">
+
+                <div class="dashboard-top">
+                    <div class="window-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+
+                    <div class="dashboard-address">
+                        <i class="bi bi-grid-1x2"></i>
+                        breakfix.onrender.com
+                    </div>
+
+                    <div class="online-status">
+                        <i class="bi bi-circle-fill"></i>
+                        Online
+                    </div>
+                </div>
+
+                <div class="dashboard-body">
+
+                    <!-- REMOVED MINI-STATS -->
+
+                    <div class="report-preview">
+                        <div class="report-heading">
+                            <h3>AC Unit Water Leak</h3>
+                            <span class="status assigned">ASSIGNED</span>
+                        </div>
+
+                        <p class="report-detail">
+                            <i class="bi bi-geo-alt-fill"></i>
+                            &nbsp; 2nd Floor — Conference Room B
+                        </p>
+
+                        <p class="report-detail">
+                            <i class="bi bi-tools"></i>
+                            &nbsp; Assigned to: Maintenance Crew
+                        </p>
+
+                        <p class="report-detail">
+                            <i class="bi bi-exclamation-circle-fill" style="color: #ef4444;"></i>
+                            &nbsp; High priority
+                        </p>
+                    </div>
+
+                    <div class="report-preview">
+                        <div class="report-heading">
+                            <h3>Black Leather Wallet</h3>
+                            <span class="status claimed">CLAIMED</span>
+                        </div>
+
+                        <p class="report-detail">
+                            <i class="bi bi-bookmark-fill"></i>
+                            &nbsp; Category: Wallet · Found at 3rd Floor
+                        </p>
+
+                        <p class="report-detail">
+                            <i class="bi bi-check-circle-fill"></i>
+                            &nbsp; Lost &amp; Found item record
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section" id="features">
+        <div class="container">
+
+            <div class="section-heading">
+                <h2>Everything You Need in One Place</h2>
+                <p>
+                    BreakFix helps employees and administrators organize
+                    workplace reports and keep track of important updates.
+                </p>
+            </div>
+
+            <div class="features-grid">
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <h3>Facility Reporting</h3>
+                    <p>
+                        Report broken chairs, damaged doors, leaking faucets,
+                        faulty lights, and other workplace problems.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-clipboard-check"></i>
+                    </div>
+                    <h3>Maintenance Tracking</h3>
+                    <p>
+                        Organize maintenance assignments and monitor
+                        the progress of facility repairs.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h3>Lost &amp; Found</h3>
+                    <p>
+                        Record lost and found belongings and manage
+                        their status to help items return to their owners.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <h3>User Portals</h3>
+                    <p>
+                        Provide separate access for employees,
+                        administrators, and maintenance personnel.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-bar-chart-line-fill"></i>
+                    </div>
+                    <h3>Report Management</h3>
+                    <p>
+                        Keep report details organized for easier review
+                        and maintenance coordination.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <h3>Status Updates</h3>
+                    <p>
+                        Follow report progress from review and assignment
+                        through resolution.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section how-section" id="how">
+        <div class="container">
+
+            <div class="section-heading">
+                <h2>How It Works</h2>
+                <p>
+                    A simple process that helps workplace concerns
+                    get recorded and managed.
+                </p>
+            </div>
+
+            <div class="steps-grid">
+
+                <div class="step-card">
+                    <div class="step-number">01</div>
+                    <h3>Submit</h3>
+                    <p>
+                        Employees submit a facility problem or
+                        lost and found report.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <h3>Review</h3>
+                    <p>
+                        The administrator checks the report
+                        and its submitted details.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <h3>Assign</h3>
+                    <p>
+                        Maintenance staff receive assigned
+                        facility repair tasks.
+                    </p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <h3>Track</h3>
+                    <p>
+                        Authorized users monitor updates
+                        until the issue is resolved.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTALS -->
+    <section class="section" id="portals">
+        <div class="container">
+
+            <div class="section-heading">
+                <h2>One System, Different Portals</h2>
+                <p>
+                    Each user can access the functions intended
+                    for their role in the workplace.
+                </p>
+            </div>
+
+            <div class="portals-grid">
+
+                <div class="portal-card">
+                    <div class="feature-icon" style="margin: auto;">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <h3>Employee Portal</h3>
+                    <p>
+                        Submit facility reports, view your reports,
+                        and record lost or found items.
+                    </p>
+                    <a href="/login" class="btn btn-outline">
+                        <i class="bi bi-box-arrow-in-right"></i>
+                        Sign In
+                    </a>
+                </div>
+
+                <div class="portal-card">
+                    <div class="feature-icon" style="margin: auto;">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <h3>Admin Portal</h3>
+                    <p>
+                        Review reports, assign maintenance staff,
+                        and manage workplace records.
+                    </p>
+                    <a href="/login" class="btn btn-outline">
+                        <i class="bi bi-shield-check"></i>
+                        Admin Login
+                    </a>
+                </div>
+
+                <div class="portal-card">
+                    <div class="feature-icon" style="margin: auto;">
+                        <i class="bi bi-wrench-adjustable"></i>
+                    </div>
+                    <h3>Maintenance Portal</h3>
+                    <p>
+                        View assigned facility problems and update
+                        repair progress and notes.
+                    </p>
+                    <a href="/login" class="btn btn-outline">
+                        <i class="bi bi-tools"></i>
+                        Staff Login
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section about-section" id="about">
+        <div class="container about-content">
+
+            <div>
+                <span class="about-label">About BreakFix</span>
+
+                <h2>A More Organized Workplace Starts Here</h2>
+
+                <p>
+                    BreakFix is a workplace facility problem reporting
+                    system designed to help employees report issues
+                    and help authorized staff manage them.
+                </p>
+
+                <p>
+                    By keeping reports and status updates in one system,
+                    BreakFix aims to make workplace facility management
+                    more organized and convenient.
+                </p>
+
+                <a href="/register" class="btn btn-primary">
+                    Get Started
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="about-panel">
+                <h3>Our Main Goals</h3>
+                <p>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Make workplace reporting easier
+                </p>
+                <p>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Organize maintenance assignments
+                </p>
+                <p>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Manage lost and found records
+                </p>
+                <p>
+                    <i class="bi bi-check-circle-fill"></i>
+                    Improve report status tracking
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section contact-section" id="contact">
+        <div class="container">
+
+            <div class="contact-box">
+                <h2>Need Help With BreakFix?</h2>
+                <p>
+                    For questions about reports or access to the system,
+                    contact your workplace administrator.
+                </p>
+
+                <a href="/login" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Access BreakFix
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container footer-content">
+            <strong>
+                <i class="bi bi-tools"></i>
+                BreakFix
+            </strong>
+            <p>© 2026 BreakFix Workplace Facility Management System.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

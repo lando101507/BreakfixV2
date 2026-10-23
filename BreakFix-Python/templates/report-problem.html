@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Report Problem - BreakFix</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}">
+
+    <style>
+
+        .form-card {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 32px;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            padding-bottom: 25px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .form-header-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .form-header h1 {
+            margin: 0 0 6px;
+            font-size: 24px;
+            color: #0f172a;
+        }
+
+        .form-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1e293b;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .form-group label span {
+            color: #ef4444;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #1e293b;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .input-icon {
+            position: relative;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 17px;
+        }
+
+        .input-icon input {
+            padding-left: 42px;
+        }
+
+        .priority-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .priority-option {
+            position: relative;
+        }
+
+        .priority-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .priority-option label {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 10px;
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #475569;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .priority-option input:checked + label {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .upload-box {
+            border: 2px dashed #cbd5e1;
+            border-radius: 14px;
+            padding: 28px;
+            text-align: center;
+            background: #f8fafc;
+            transition: 0.2s;
+        }
+
+        .upload-box:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .upload-icon {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .upload-box strong {
+            display: block;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .upload-box span {
+            display: block;
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .upload-box input[type="file"] {
+            width: auto;
+            border: none;
+            padding: 0;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        #file-name {
+            margin: 12px 0 0;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .cancel-btn,
+        .submit-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 44px;
+            padding: 0 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s;
+            box-sizing: border-box;
+        }
+
+        .cancel-btn {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .cancel-btn:hover {
+            background: #e2e8f0;
+        }
+
+        .submit-btn {
+            border: none;
+            background: #2563eb;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .required-note {
+            margin-top: -8px;
+            margin-bottom: 22px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        @media (max-width: 700px) {
+
+            .form-card {
+                padding: 20px;
+            }
+
+            .form-header {
+                flex-direction: column;
+            }
+
+            .priority-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-buttons {
+                flex-direction: column-reverse;
+            }
+
+            .cancel-btn,
+            .submit-btn {
+                width: 100%;
+            }
+
+        }
+
+        
+/* =========================
+   LOGOUT CONFIRMATION MODAL
+========================= */
+
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    background: rgba(5, 12, 28, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logout-modal.show {
+    display: flex;
+}
+
+.logout-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 30px;
+
+    border: 2px solid transparent;
+    border-radius: 24px;
+
+    background:
+        linear-gradient(#111827, #111827) padding-box,
+        linear-gradient(
+            135deg,
+            #a855f7,
+            #ec4899,
+            #06b6d4,
+            #facc15,
+            #a855f7
+        ) border-box;
+
+    background-size: auto, 300% 300%;
+    animation: logoutBorderGlow 6s ease infinite,
+               logoutModalPop 0.25s ease-out;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    text-align: center;
+}
+
+@keyframes logoutBorderGlow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
+
+@keyframes logoutModalPop {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.logout-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+
+    border-radius: 18px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+
+    color: #60a5fa;
+    font-size: 29px;
+}
+
+.logout-modal-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    font-weight: 750;
+}
+
+.logout-modal-content p {
+    margin: 0 0 25px;
+    color: #9caec6;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.logout-buttons button,
+.logout-buttons a {
+    flex: 1;
+    min-height: 46px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+
+    padding: 12px 10px;
+    border-radius: 12px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.logout-buttons .cancel-btn {
+    border: 1px solid #334155;
+    background: #111b2b;
+    color: #cbd5e1;
+}
+
+.logout-buttons .cancel-btn:hover {
+    border-color: #64748b;
+    background: #1e293b;
+}
+
+.logout-buttons .confirm-logout-btn {
+    border: none;
+    background: #2864ed;
+    color: #ffffff;
+}
+
+.logout-buttons .confirm-logout-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 20px rgba(37, 99, 235, 0.25);
+}
+
+.logout-buttons button:focus-visible,
+.logout-buttons a:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .logout-modal-content {
+        padding: 28px 22px;
+        border-radius: 21px;
+    }
+
+    .logout-modal-content h2 {
+        font-size: 22px;
+    }
+
+    .logout-buttons {
+        gap: 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logout-modal-content {
+        animation: none;
+    }
+
+    .logout-buttons button,
+    .logout-buttons a {
+        transition: none;
+    }
+}
+
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =========================
+         BREAKFIX LOADING SCREEN
+    ========================== -->
+    <div id="breakfix-loader">
+        <div class="breakfix-loader-logo">
+            <div class="breakfix-loader-ring"></div>
+
+            <div class="loader-icon">
+                <i class="bi bi-tools"></i>
+            </div>
+        </div>
+
+        <h2 class="breakfix-loader-title">BreakFix</h2>
+
+        <div class="breakfix-loader-bar"></div>
+
+        <p class="breakfix-loader-text">Loading BreakFix...</p>
+
+        <div class="breakfix-loader-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="bi bi-tools"></i>
+            <span>BreakFix</span>
+        </div>
+
+
+        <div class="user-card">
+
+            <div class="user-icon">
+                <i class="bi bi-person-fill"></i>
+            </div>
+
+            <div>
+                <strong>{{ fullname }}</strong>
+                <small>{{ role|capitalize }}</small>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="/dashboard">
+                <i class="bi bi-grid-1x2-fill"></i>
+                Dashboard
+            </a>
+
+            <a href="/report-problem" class="active">
+                <i class="bi bi-exclamation-circle-fill"></i>
+                Report Problem
+            </a>
+
+            <a href="/my-reports">
+                <i class="bi bi-file-earmark-text-fill"></i>
+                My Reports
+            </a>
+
+            <a href="/lost-found">
+                <i class="bi bi-search"></i>
+                Lost & Found
+            </a>
+
+            <a href="/my-items">
+                <i class="bi bi-box-seam-fill"></i>
+                My Items
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="logout" onclick="openLogoutModal(event)">
+                <i class="bi bi-box-arrow-left"></i>
+                Logout
+             </a>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div>
+
+                <h2>Report Problem</h2>
+
+                <p>
+                    Submit a workplace facility problem
+                </p>
+
+            </div>
+
+
+            <div class="system-status">
+
+                <span></span>
+
+                System Online
+
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+            <div class="form-card">
+
+
+                <!-- HEADER -->
+
+                <div class="form-header">
+
+                    <div class="form-header-icon">
+                        <i class="bi bi-exclamation-circle-fill"></i>
+                    </div>
+
+                    <div>
+
+                        <h1>
+                            Report a Facility Problem
+                        </h1>
+
+                        <p>
+                            Please provide the details of the problem
+                            so our maintenance team can assist you.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <p class="required-note">
+                    <span style="color:#ef4444;">*</span>
+                    Required fields
+                </p>
+
+
+                <form
+                    action="/report-problem"
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+
+
+                    <!-- CATEGORY -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Problem Category <span>*</span>
+                        </label>
+
+                        <select
+                            name="category_id"
+                            required
+                        >
+
+                            <option value="">
+                                Select a category
+                            </option>
+
+                            {% for category in categories %}
+
+                            <option value="{{ category.id }}">
+                                {{ category.name }}
+                            </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- LOCATION -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Location <span>*</span>
+                        </label>
+
+                        <div class="input-icon">
+
+                            <i class="bi bi-geo-alt-fill"></i>
+
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="Example: 2nd Floor, Room 204"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PRIORITY -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Priority
+                        </label>
+
+                        <div class="priority-grid">
+
+                            <div class="priority-option">
+
+                                <input
+                                    type="radio"
+                                    id="priority-low"
+                                    name="priority"
+                                    value="Low"
+                                >
+
+                                <label for="priority-low">
+                                    Low
+                                </label>
+
+                            </div>
+
+
+                            <div class="priority-option">
+
+                                <input
+                                    type="radio"
+                                    id="priority-medium"
+                                    name="priority"
+                                    value="Medium"
+                                    checked
+                                >
+
+                                <label for="priority-medium">
+                                    Medium
+                                </label>
+
+                            </div>
+
+
+                            <div class="priority-option">
+
+                                <input
+                                    type="radio"
+                                    id="priority-high"
+                                    name="priority"
+                                    value="High"
+                                >
+
+                                <label for="priority-high">
+                                    High
+                                </label>
+
+                            </div>
+
+
+                            <div class="priority-option">
+
+                                <input
+                                    type="radio"
+                                    id="priority-urgent"
+                                    name="priority"
+                                    value="Urgent"
+                                >
+
+                                <label for="priority-urgent">
+                                    Urgent
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Problem Description <span>*</span>
+                        </label>
+
+                        <textarea
+                            name="description"
+                            placeholder="Describe the problem clearly. Include what happened and where the problem can be found."
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- PHOTO -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Photo
+                        </label>
+
+                        <div class="upload-box">
+
+                            <div class="upload-icon">
+
+                                <i class="bi bi-cloud-arrow-up-fill"></i>
+
+                            </div>
+
+                            <strong>
+                                Upload a photo
+                            </strong>
+
+                            <span>
+                                JPG, JPEG, PNG or WEBP — Maximum 10MB
+                            </span>
+
+                            <input
+                                type="file"
+                                name="photo"
+                                accept=".jpg,.jpeg,.png,.webp"
+                                onchange="showFileName(this)"
+                            >
+
+                            <p id="file-name"></p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="form-buttons">
+
+                        <a
+                            href="/dashboard"
+                            class="cancel-btn"
+                        >
+                            <i class="bi bi-x-lg"></i>
+                            Cancel
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="submit-btn"
+                        >
+                            <i class="bi bi-send-fill"></i>
+                            Submit Report
+                        </button>
+
+                    </div>
+
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<!-- =========================
+         LOGOUT CONFIRMATION MODAL
+    ========================== -->
+    <div
+        id="logoutModal"
+        class="logout-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logoutTitle"
+        aria-describedby="logoutDescription"
+        aria-hidden="true"
+    >
+        <div class="logout-modal-content">
+
+            <div class="logout-icon">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+
+            <h2 id="logoutTitle">Confirm Logout</h2>
+
+            <p id="logoutDescription">
+                Are you sure you want to log out of your BreakFix account?
+            </p>
+
+            <div class="logout-buttons">
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeLogoutModal()"
+                >
+                    Cancel
+                </button>
+
+                <a href="/logout" class="confirm-logout-btn">
+                    Yes, Logout
+                </a>
+            </div>
+    </div>
+
+</div>
+
+<!-- LOGOUT MODAL JAVASCRIPT -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const logoutModal = document.getElementById("logoutModal");
+
+        window.openLogoutModal = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            if (!logoutModal) {
+                console.error("Logout modal was not found.");
+                return;
+            }
+
+            logoutModal.classList.add("show");
+            logoutModal.setAttribute("aria-hidden", "false");
+
+            const cancelButton = logoutModal.querySelector(".cancel-btn");
+
+            if (cancelButton) {
+                cancelButton.focus();
+            }
+        };
+
+        window.closeLogoutModal = function () {
+            if (!logoutModal) {
+                return;
+            }
+
+            logoutModal.classList.remove("show");
+            logoutModal.setAttribute("aria-hidden", "true");
+        };
+
+        // Close when clicking the dark background
+        if (logoutModal) {
+            logoutModal.addEventListener("click", function (event) {
+                if (event.target === logoutModal) {
+                    window.closeLogoutModal();
+                }
+            });
+        }
+
+        // Close when pressing Escape
+        document.addEventListener("keydown", function (event) {
+            if (
+                event.key === "Escape" &&
+                logoutModal &&
+                logoutModal.classList.contains("show")
+            ) {
+                window.closeLogoutModal();
+            }
+        });
+
+    });
+</script>
+
+
+<script>
+
+function showFileName(input) {
+
+    const fileName = document.getElementById("file-name");
+
+    if (input.files && input.files.length > 0) {
+
+        fileName.textContent =
+            "Selected: " + input.files[0].name;
+
+    } else {
+
+        fileName.textContent = "";
+
+    }
+
+}
+
+</script>
+<script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+</body>
+
+</html>

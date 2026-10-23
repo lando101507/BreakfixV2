@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Assigned Reports | BreakFix</title>
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}">      
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        /* SIDEBAR - SAME AS DASHBOARD */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 245px;
+            height: 100vh;
+            background: #111827;
+            color: white;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #2563eb;
+            border-radius: 12px;
+            font-size: 23px;
+        }
+
+        .profile {
+            background: #1f2937;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile small {
+            color: #cbd5e1;
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .profile strong {
+            font-size: 16px;
+        }
+
+        .menu-label {
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 0 10px 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 14px;
+            color: #e2e8f0;
+            text-decoration: none;
+            border-radius: 9px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .nav-link i,
+        .logout i {
+            font-size: 18px;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+        }
+
+        .logout {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fca5a5;
+            text-decoration: none;
+            padding: 12px;
+            font-weight: bold;
+        }
+
+        .logout:hover {
+            color: #fecaca;
+        }
+
+        /* MAIN CONTENT - SAME AS DASHBOARD */
+        .main {
+            margin-left: 245px;
+            padding: 35px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            font-size: 30px;
+            color: #172554;
+        }
+
+        .page-header p {
+            color: #64748b;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .role-badge {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* WELCOME CARD */
+        .intro-card {
+            background: white;
+            padding: 24px 28px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            margin: 20px 0 24px;
+        }
+
+        .intro-card h2 {
+            margin: 0 0 10px;
+            color: #172554;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .intro-card p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* REPORT CARDS */
+        .report {
+            background: white;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+            margin-bottom: 22px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .report-code {
+            color: #059669;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .report-title {
+            color: #102653;
+            font-size: 22px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: #fef3c7;
+            color: #92400e;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-in-progress {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-waiting {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .status-resolved {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .report-details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 22px;
+        }
+
+        .detail-box {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 14px;
+            overflow-wrap: anywhere;
+            min-width: 0;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 7px;
+        }
+
+        .detail-label i {
+            margin-right: 4px;
+        }
+
+        .detail-value {
+            color: #172b4d;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .description {
+            color: #334155;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+            margin-bottom: 18px;
+        }
+
+        .description strong,
+        .photo-section strong {
+            color: #102653;
+        }
+
+        .photo-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: #059669;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .photo-link:hover {
+            text-decoration: underline;
+        }
+
+        .section-divider {
+            border: 0;
+            border-top: 1px solid #cbd5e1;
+            margin: 22px 0;
+        }
+
+        .update-title {
+            font-size: 20px;
+            color: #102653;
+            margin: 0 0 20px;
+        }
+
+        .update-title i {
+            margin-right: 7px;
+        }
+
+        .form-label {
+            display: block;
+            color: #172b4d;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .form-select,
+        .form-control {
+            display: block;
+            width: 100%;
+            border: 1px solid #d5deea;
+            border-radius: 9px;
+            padding: 12px;
+            color: #334155;
+            background: white;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .form-select:focus,
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-update {
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 9px;
+            padding: 12px 19px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-update:hover {
+            background: #1d4ed8;
+        }
+
+        /* EMPTY STATE */
+        .empty {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 60px 20px;
+            text-align: center;
+            color: #64748b;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        .empty i {
+            font-size: 45px;
+            color: #94a3b8;
+        }
+
+        .empty h3 {
+            color: #172554;
+            font-size: 22px;
+            margin: 17px 0 10px;
+        }
+
+        .empty p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            padding: 25px 0 5px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) {
+            .report-details {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                padding: 18px;
+            }
+
+            .brand {
+                margin-bottom: 18px;
+            }
+
+            .profile {
+                margin-bottom: 18px;
+            }
+
+            .sidebar-bottom {
+                margin-top: 12px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 20px 15px;
+            }
+
+            .page-header h1 {
+                font-size: 25px;
+            }
+
+            .intro-card {
+                padding: 20px;
+            }
+
+            .intro-card h2 {
+                font-size: 21px;
+            }
+
+            .report {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .report-details {
+                grid-template-columns: 1fr;
+            }
+
+            .report-header {
+                flex-direction: column;
+            }
+        }
+
+        
+/* =========================
+   LOGOUT CONFIRMATION MODAL
+========================= */
+
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    background: rgba(5, 12, 28, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logout-modal.show {
+    display: flex;
+}
+
+.logout-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 30px;
+
+    border: 2px solid transparent;
+    border-radius: 24px;
+
+    background:
+        linear-gradient(#111827, #111827) padding-box,
+        linear-gradient(
+            135deg,
+            #a855f7,
+            #ec4899,
+            #06b6d4,
+            #facc15,
+            #a855f7
+        ) border-box;
+
+    background-size: auto, 300% 300%;
+    animation: logoutBorderGlow 6s ease infinite,
+               logoutModalPop 0.25s ease-out;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    text-align: center;
+}
+
+@keyframes logoutBorderGlow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
+
+@keyframes logoutModalPop {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.logout-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+
+    border-radius: 18px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+
+    color: #60a5fa;
+    font-size: 29px;
+}
+
+.logout-modal-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    font-weight: 750;
+}
+
+.logout-modal-content p {
+    margin: 0 0 25px;
+    color: #9caec6;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.logout-buttons button,
+.logout-buttons a {
+    flex: 1;
+    min-height: 46px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+
+    padding: 12px 10px;
+    border-radius: 12px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.logout-buttons .cancel-btn {
+    border: 1px solid #334155;
+    background: #111b2b;
+    color: #cbd5e1;
+}
+
+.logout-buttons .cancel-btn:hover {
+    border-color: #64748b;
+    background: #1e293b;
+}
+
+.logout-buttons .confirm-logout-btn {
+    border: none;
+    background: #2864ed;
+    color: #ffffff;
+}
+
+.logout-buttons .confirm-logout-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 20px rgba(37, 99, 235, 0.25);
+}
+
+.logout-buttons button:focus-visible,
+.logout-buttons a:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .logout-modal-content {
+        padding: 28px 22px;
+        border-radius: 21px;
+    }
+
+    .logout-modal-content h2 {
+        font-size: 22px;
+    }
+
+    .logout-buttons {
+        gap: 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logout-modal-content {
+        animation: none;
+    }
+
+    .logout-buttons button,
+    .logout-buttons a {
+        transition: none;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+     <!-- BreakFix Loading Screen -->
+    <div id="breakfix-loader">
+        <div class="breakfix-loader-logo">
+            <div class="breakfix-loader-ring"></div>
+            <div class="loader-icon">
+    <i class="bi bi-tools"></i>
+</div>
+        </div>
+
+        <h2 class="breakfix-loader-title">BreakFix</h2>
+
+        <div class="breakfix-loader-bar"></div>
+
+        <p class="breakfix-loader-text">Loading BreakFix...</p>
+
+        <div class="breakfix-loader-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="bi bi-tools"></i>
+            </div>
+            <span>BreakFix</span>
+        </div>
+
+        <div class="profile">
+            <small>Logged in as Maintenance</small>
+            <strong>{{ fullname }}</strong>
+        </div>
+
+        <p class="menu-label">WORKSPACE</p>
+
+        <a href="/maintenance-dashboard" class="nav-link">
+            <i class="bi bi-speedometer2"></i>
+            Dashboard
+        </a>
+
+        <a href="/maintenance-assigned" class="nav-link active">
+            <i class="bi bi-clipboard-check"></i>
+            My Assigned Reports
+        </a>
+
+        <a href="/maintenance-done" class="nav-link">
+            <i class="bi bi-check-circle"></i>
+            Done Assigned
+        </a>
+
+        <div class="sidebar-bottom">
+            <a href="#" class="logout" onclick="openLogoutModal(event)">
+                <i class="bi bi-box-arrow-left"></i>
+                Logout
+             </a>
+        </div>
+
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+        <header class="page-header">
+            <div>
+                <h1>My Assigned Reports</h1>
+                <p>View assigned facility problems and update repair progress.</p>
+            </div>
+
+            <span class="role-badge">
+                <i class="bi bi-tools"></i>
+                MAINTENANCE PORTAL
+            </span>
+        </header>
+
+        <section class="intro-card">
+            <h2>Welcome, {{ fullname }}!</h2>
+            <p>
+                Review your assigned facility reports, record repair notes,
+                and update the status of each workplace problem.
+            </p>
+        </section>
+
+        {% if reports %}
+
+            {% for report in reports %}
+
+                {% set current_status = report.get('status', 'ASSIGNED') %}
+
+                <article class="report">
+
+                    <div class="report-header">
+                        <div>
+                            <div class="report-code">
+                                {{ report.get('report_code') or ('Report #' ~ report.get('id')) }}
+                            </div>
+
+                            <div class="report-title">
+                                {{ report.get('category_name') or 'Facility Problem' }}
+                            </div>
+                        </div>
+
+                        <span class="status {% if current_status == 'IN PROGRESS' %}status-in-progress{% elif current_status == 'WAITING FOR PARTS' %}status-waiting{% elif current_status == 'RESOLVED' %}status-resolved{% endif %}">
+                            {{ current_status }}
+                        </span>
+                    </div>
+
+                    <div class="report-details">
+
+                        <div class="detail-box">
+                            <div class="detail-label">
+                                <i class="bi bi-geo-alt"></i>
+                                Location
+                            </div>
+                            <div class="detail-value">
+                                {{ report.get('location') or 'No location provided' }}
+                            </div>
+                        </div>
+
+                        <div class="detail-box">
+                            <div class="detail-label">
+                                <i class="bi bi-exclamation-circle"></i>
+                                Priority
+                            </div>
+                            <div class="detail-value">
+                                {{ report.get('priority') or 'Normal' }}
+                            </div>
+                        </div>
+
+                        <div class="detail-box">
+                            <div class="detail-label">
+                                <i class="bi bi-calendar"></i>
+                                Date Reported
+                            </div>
+                            <div class="detail-value">
+                                {{ (report.get('created_at') or 'Not available')[:10] }}
+                            </div>
+                        </div>
+
+                        <div class="detail-box">
+                            <div class="detail-label">
+                                <i class="bi bi-hash"></i>
+                                Report ID
+                            </div>
+                            <div class="detail-value">
+                                {{ report.get('id') }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="description">
+                        <strong>Description:</strong><br>
+                        {{ report.get('description') or 'No description provided.' }}
+                    </div>
+
+                    {% if report.get('photo') %}
+                        <div class="photo-section">
+                            <strong>Attached Photo:</strong><br>
+                            <a href="{{ report.get('photo') }}"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="photo-link">
+                                <i class="bi bi-image"></i>
+                                View Report Photo
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <hr class="section-divider">
+
+                    <h3 class="update-title">
+                        <i class="bi bi-pencil-square"></i>
+                        Update Report
+                    </h3>
+
+                    <form action="{{ url_for('maintenance_update_report') }}"
+                          method="POST">
+
+                        <input type="hidden"
+                               name="report_id"
+                               value="{{ report.get('id') }}">
+
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="status-{{ report.get('id') }}">
+                                Report Status
+                            </label>
+
+                            <select name="status"
+                                    id="status-{{ report.get('id') }}"
+                                    class="form-select"
+                                    required>
+
+                                <option value="ASSIGNED"
+                                    {% if current_status == 'ASSIGNED' %}selected{% endif %}>
+                                    Assigned
+                                </option>
+
+                                <option value="IN PROGRESS"
+                                    {% if current_status == 'IN PROGRESS' %}selected{% endif %}>
+                                    In Progress
+                                </option>
+
+                                <option value="WAITING FOR PARTS"
+                                    {% if current_status == 'WAITING FOR PARTS' %}selected{% endif %}>
+                                    Waiting for Parts
+                                </option>
+
+                                <option value="RESOLVED"
+                                    {% if current_status == 'RESOLVED' %}selected{% endif %}>
+                                    Resolved
+                                </option>
+
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label"
+                                   for="notes-{{ report.get('id') }}">
+                                Repair Notes
+                            </label>
+
+                            <textarea name="repair_notes"
+                                      id="notes-{{ report.get('id') }}"
+                                      class="form-control"
+                                      rows="3"
+                                      placeholder="Write your repair progress or completed work...">{{ report.get('repair_notes') or '' }}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn-update">
+                            <i class="bi bi-save"></i>
+                            Save Update
+                        </button>
+
+                    </form>
+
+                </article>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <i class="bi bi-clipboard-check"></i>
+                <h3>No Assigned Reports</h3>
+                <p>
+                    You don't have any active reports assigned to you right now.
+                </p>
+            </div>
+
+        {% endif %}
+
+        <footer class="footer">
+            BreakFix Facility Management System
+        </footer>
+
+    </main>
+
+    <!-- =========================
+         LOGOUT CONFIRMATION MODAL
+    ========================== -->
+    <div
+        id="logoutModal"
+        class="logout-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logoutTitle"
+        aria-describedby="logoutDescription"
+        aria-hidden="true"
+    >
+        <div class="logout-modal-content">
+
+            <div class="logout-icon">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+
+            <h2 id="logoutTitle">Confirm Logout</h2>
+
+            <p id="logoutDescription">
+                Are you sure you want to log out of your BreakFix account?
+            </p>
+
+            <div class="logout-buttons">
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeLogoutModal()"
+                >
+                    Cancel
+                </button>
+
+                <a href="/logout" class="confirm-logout-btn">
+                    Yes, Logout
+                </a>
+            </div>
+    </div>
+
+</div>
+
+<!-- LOGOUT MODAL JAVASCRIPT -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const logoutModal = document.getElementById("logoutModal");
+
+        window.openLogoutModal = function (event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+
+            if (!logoutModal) {
+                console.error("Logout modal was not found.");
+                return;
+            }
+
+            logoutModal.classList.add("show");
+            logoutModal.setAttribute("aria-hidden", "false");
+
+            const cancelButton = logoutModal.querySelector(".cancel-btn");
+
+            if (cancelButton) {
+                cancelButton.focus();
+            }
+        };
+
+        window.closeLogoutModal = function () {
+            if (!logoutModal) {
+                return;
+            }
+
+            logoutModal.classList.remove("show");
+            logoutModal.setAttribute("aria-hidden", "true");
+        };
+
+        // Close when clicking the dark background
+        if (logoutModal) {
+            logoutModal.addEventListener("click", function (event) {
+                if (event.target === logoutModal) {
+                    window.closeLogoutModal();
+                }
+            });
+        }
+
+        // Close when pressing Escape
+        document.addEventListener("keydown", function (event) {
+            if (
+                event.key === "Escape" &&
+                logoutModal &&
+                logoutModal.classList.contains("show")
+            ) {
+                window.closeLogoutModal();
+            }
+        });
+
+    });
+</script>
+    
+<script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+</body>
+</html>

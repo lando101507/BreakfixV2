@@ -1,0 +1,889 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard | BreakFix</title>
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Loading Screen CSS -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/loading.css') }}"
+    >
+
+    <style>
+        /* =========================
+           GENERAL STYLES
+        ========================= */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fb;
+            color: #1e293b;
+        }
+
+        /* =========================
+           SIDEBAR
+        ========================= */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 245px;
+            height: 100vh;
+            padding: 25px 17px;
+            display: flex;
+            flex-direction: column;
+            background: #111827;
+            color: white;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 0 12px 28px;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 8px;
+            color: #60a5fa;
+        }
+
+        .profile {
+            padding: 15px;
+            margin-bottom: 25px;
+            background: #1f2937;
+            border-radius: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile small {
+            display: block;
+            margin-bottom: 6px;
+            color: #9ca3af;
+        }
+
+        .profile strong {
+            font-size: 14px;
+        }
+
+        .nav-title {
+            padding: 0 12px;
+            margin-bottom: 12px;
+            color: #9ca3af;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 14px;
+            margin-bottom: 6px;
+            border-radius: 8px;
+            color: #cbd5e1;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .nav-link.active,
+        .nav-link:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 15px;
+        }
+
+        .logout {
+            color: #fca5a5;
+            cursor: pointer;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+        .main {
+            min-width: 0;
+            margin-left: 245px;
+            padding: 28px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .topbar h1 {
+            margin: 0 0 7px;
+            font-size: 27px;
+        }
+
+        .topbar p {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .admin-tag {
+            padding: 9px 13px;
+            border-radius: 20px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           WELCOME SECTION
+        ========================= */
+        .welcome {
+            padding: 27px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            background: linear-gradient(
+                120deg,
+                #1d4ed8,
+                #2563eb,
+                #3b82f6
+            );
+            color: white;
+        }
+
+        .welcome h2 {
+            margin: 0 0 9px;
+            font-size: 23px;
+        }
+
+        .welcome p {
+            margin: 0;
+            color: #dbeafe;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           STATISTICS CARDS
+        ========================= */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 17px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            min-width: 0;
+            padding: 21px;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            background: white;
+            box-shadow: 0 3px 10px #0f172a08;
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 11px;
+            font-size: 20px;
+        }
+
+        .blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .purple {
+            background: #ede9fe;
+            color: #7c3aed;
+        }
+
+        .green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        /* =========================
+           PANELS AND TABLES
+        ========================= */
+        .panel {
+            margin-bottom: 25px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            background: white;
+            box-shadow: 0 3px 10px #0f172a08;
+        }
+
+        .panel-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .panel-header h2 {
+            margin: 0 0 6px;
+            font-size: 18px;
+        }
+
+        .panel-header p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 950px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px 17px;
+            border-bottom: 1px solid #eef2f7;
+            text-align: left;
+            vertical-align: top;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        td strong {
+            color: #111827;
+        }
+
+        .muted {
+            margin-top: 5px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        /* =========================
+           STATUS AND PRIORITY
+        ========================= */
+        .badge {
+            display: inline-block;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .status-new,
+        .status-under-review {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-assigned {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-in-progress,
+        .status-waiting-for-parts {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .priority-high,
+        .priority-urgent {
+            color: #b91c1c;
+            font-weight: bold;
+        }
+
+        .priority-medium {
+            color: #b45309;
+            font-weight: bold;
+        }
+
+        .priority-low {
+            color: #15803d;
+            font-weight: bold;
+        }
+
+        /* =========================
+           ACTION FORMS
+        ========================= */
+        .action-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 165px;
+        }
+
+        select,
+        .action-form button {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 12px;
+        }
+
+        select {
+            background: white;
+            color: #334155;
+        }
+
+        .action-form button {
+            border: none;
+            background: #2563eb;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .action-form button:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           EMPTY STATE AND FOOTER
+        ========================= */
+        .empty {
+            padding: 45px 20px;
+            color: #64748b;
+            text-align: center;
+        }
+
+        .empty i {
+            display: block;
+            margin-bottom: 12px;
+            font-size: 35px;
+        }
+
+        .footer {
+            padding: 10px;
+            color: #94a3b8;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        
+/* =========================
+   LOGOUT CONFIRMATION MODAL
+========================= */
+
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    background: rgba(5, 12, 28, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.logout-modal.show {
+    display: flex;
+}
+
+.logout-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 30px;
+
+    border: 2px solid transparent;
+    border-radius: 24px;
+
+    background:
+        linear-gradient(#111827, #111827) padding-box,
+        linear-gradient(
+            135deg,
+            #a855f7,
+            #ec4899,
+            #06b6d4,
+            #facc15,
+            #a855f7
+        ) border-box;
+
+    background-size: auto, 300% 300%;
+    animation: logoutBorderGlow 6s ease infinite,
+               logoutModalPop 0.25s ease-out;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    text-align: center;
+}
+
+@keyframes logoutBorderGlow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
+
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
+
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
+
+@keyframes logoutModalPop {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.logout-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+
+    border-radius: 18px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+
+    color: #60a5fa;
+    font-size: 29px;
+}
+
+.logout-modal-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    font-weight: 750;
+}
+
+.logout-modal-content p {
+    margin: 0 0 25px;
+    color: #9caec6;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.logout-buttons button,
+.logout-buttons a {
+    flex: 1;
+    min-height: 46px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+
+    padding: 12px 10px;
+    border-radius: 12px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.logout-buttons .cancel-btn {
+    border: 1px solid #334155;
+    background: #111b2b;
+    color: #cbd5e1;
+}
+
+.logout-buttons .cancel-btn:hover {
+    border-color: #64748b;
+    background: #1e293b;
+}
+
+.logout-buttons .confirm-logout-btn {
+    border: none;
+    background: #2864ed;
+    color: #ffffff;
+}
+
+.logout-buttons .confirm-logout-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 20px rgba(37, 99, 235, 0.25);
+}
+
+.logout-buttons button:focus-visible,
+.logout-buttons a:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .logout-modal-content {
+        padding: 28px 22px;
+        border-radius: 21px;
+    }
+
+    .logout-modal-content h2 {
+        font-size: 22px;
+    }
+
+    .logout-buttons {
+        gap: 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logout-modal-content {
+        animation: none;
+    }
+
+    .logout-buttons button,
+    .logout-buttons a {
+        transition: none;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================
+         BREAKFIX LOADING SCREEN
+    ========================== -->
+    <div id="breakfix-loader">
+        <div class="breakfix-loader-logo">
+            <div class="breakfix-loader-ring"></div>
+
+            <div class="loader-icon">
+                <i class="bi bi-tools"></i>
+            </div>
+        </div>
+
+        <h2 class="breakfix-loader-title">BreakFix</h2>
+
+        <div class="breakfix-loader-bar"></div>
+
+        <p class="breakfix-loader-text">Loading BreakFix...</p>
+
+        <div class="breakfix-loader-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="bi bi-tools"></i>BreakFix
+        </div>
+
+        <div class="profile">
+            <small>Logged in as Admin</small>
+            <strong>{{ fullname }}</strong>
+        </div>
+
+        <div class="nav-title">Administration</div>
+
+        <nav>
+            <a class="nav-link active" href="/admin-dashboard">
+                <i class="bi bi-grid-1x2"></i>
+                Dashboard
+            </a>
+
+            <a class="nav-link" href="/admin/facility-reports">
+                <i class="bi bi-clipboard-data"></i>
+                Facility Reports
+            </a>
+
+            <a class="nav-link" href="/admin/lost-found">
+                <i class="bi bi-search"></i>
+                Lost &amp; Found
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <a class="nav-link logout" href="#" onclick="openLogoutModal(event)">
+                <i class="bi bi-box-arrow-left"></i>
+                Logout
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- =========================
+         MAIN DASHBOARD CONTENT
+    ========================== -->
+    <main class="main">
+
+        <!-- Top Header -->
+        <header class="topbar">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p>
+                    Manage workplace facility reports and maintenance assignments.
+                </p>
+            </div>
+
+            <span class="admin-tag">
+                <i class="bi bi-shield-check"></i>
+                Administrator
+            </span>
+        </header>
+
+        <!-- Welcome Section -->
+        <section class="welcome">
+            <h2>Welcome back, {{ fullname }}!</h2>
+            <p>
+                Here is an overview of BreakFix reports and facility concerns.
+            </p>
+        </section>
+
+        <!-- Dashboard Statistics -->
+        <section class="stats">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Reports</span>
+                    <span class="stat-icon blue">
+                        <i class="bi bi-clipboard-data"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ total_reports }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">New / Under Review</span>
+                    <span class="stat-icon orange">
+                        <i class="bi bi-hourglass-split"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ new_reports }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Assigned</span>
+                    <span class="stat-icon blue">
+                        <i class="bi bi-person-check"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ assigned_reports }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">In Progress</span>
+                    <span class="stat-icon purple">
+                        <i class="bi bi-arrow-repeat"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ in_progress_reports }}</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Resolved</span>
+                    <span class="stat-icon green">
+                        <i class="bi bi-check-circle"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ resolved_reports }}</div>
+            </div>
+
+            <div class="stat-card" id="lost-found">
+                <div class="stat-top">
+                    <span class="stat-label">Lost &amp; Found Items</span>
+                    <span class="stat-icon red">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+                <div class="stat-number">{{ total_lost_found }}</div>
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            BreakFix · Workplace Facility Problem Reporting System
+        </footer>
+
+    </main>
+
+    <!-- =========================
+         LOGOUT CONFIRMATION MODAL
+    ========================== -->
+    <div
+        id="logoutModal"
+        class="logout-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="logoutTitle"
+        aria-describedby="logoutDescription"
+        aria-hidden="true"
+    >
+        <div class="logout-modal-content">
+
+            <div class="logout-icon">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+
+            <h2 id="logoutTitle">Confirm Logout</h2>
+
+            <p id="logoutDescription">
+                Are you sure you want to log out of your BreakFix account?
+            </p>
+
+            <div class="logout-buttons">
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    onclick="closeLogoutModal()"
+                >
+                    Cancel
+                </button>
+
+                <a href="/logout" class="confirm-logout-btn">
+                    Yes, Logout
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- =========================
+         LOGOUT MODAL JAVASCRIPT
+    ========================== -->
+    <script>
+        const logoutModal = document.getElementById("logoutModal");
+
+        function openLogoutModal(event) {
+            event.preventDefault();
+
+            logoutModal.classList.add("show");
+            logoutModal.setAttribute("aria-hidden", "false");
+
+            const cancelButton = logoutModal.querySelector(".cancel-btn");
+            cancelButton.focus();
+        }
+
+        function closeLogoutModal() {
+            logoutModal.classList.remove("show");
+            logoutModal.setAttribute("aria-hidden", "true");
+        }
+
+        // Close when clicking outside the modal.
+        logoutModal.addEventListener("click", function(event) {
+            if (event.target === logoutModal) {
+                closeLogoutModal();
+            }
+        });
+
+        // Close when pressing Escape.
+        document.addEventListener("keydown", function(event) {
+            if (
+                event.key === "Escape" &&
+                logoutModal.classList.contains("show")
+            ) {
+                closeLogoutModal();
+            }
+        });
+    </script>
+
+    <!-- Loading Screen JavaScript -->
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+
+</body>
+</html>
