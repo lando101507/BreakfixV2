@@ -119,9 +119,9 @@ def forgot_password():
 
         # Build the reset link
         reset_url = url_for(
-            "reset_password",
-            token=token,
-            _external=True
+        "reset_password",
+         token=token,
+         _external=True
         )
 
         # Create the email
@@ -802,6 +802,98 @@ def my_items():
         <a href="/dashboard">Back to Dashboard</a>
         """
 
+    
+# =========================
+# EDIT MY ITEM
+# =========================
+
+@app.route("/my-items/<item_id>/edit", methods=["POST"])
+def edit_my_item(item_id):
+
+    if "user_id" not in session:
+        return redirect("/")
+
+    user_id = session["user_id"]
+
+    item_name = request.form.get("item_name", "").strip()
+    category = request.form.get("category", "").strip()
+    location = request.form.get("location", "").strip()
+    description = request.form.get("description", "").strip()
+
+    if not all([item_name, category, location, description]):
+        return redirect("/my-items")
+
+    try:
+        # Only edit the current user's active LOST/FOUND item
+        existing = (
+            supabase.table("lost_found_items")
+            .select("id")
+            .eq("id", item_id)
+            .eq("user_id", user_id)
+            .in_("status", ["LOST", "FOUND"])
+            .execute()
+        )
+
+        if not existing.data:
+            return "Item not found or cannot be edited.", 404
+
+        supabase.table("lost_found_items").update({
+            "item_name": item_name,
+            "category": category,
+            "location": location,
+            "description": description
+        }).eq("id", item_id).eq(
+            "user_id", user_id
+        ).execute()
+
+        return redirect("/my-items")
+
+    except Exception as e:
+        app.logger.exception("Unable to edit Lost & Found item")
+        return "Unable to update item. Please try again.", 500
+
+
+# =========================
+# CANCEL MY ITEM
+# =========================
+
+@app.route("/my-items/<item_id>/cancel", methods=["POST"])
+def cancel_my_item(item_id):
+
+    if "user_id" not in session:
+        return redirect("/")
+
+    user_id = session["user_id"]
+
+    try:
+        # Only cancel the current user's active LOST/FOUND item
+        existing = (
+            supabase.table("lost_found_items")
+            .select("id")
+            .eq("id", item_id)
+            .eq("user_id", user_id)
+            .in_("status", ["LOST", "FOUND"])
+            .execute()
+        )
+
+        if not existing.data:
+            return "Item not found or cannot be cancelled.", 404
+
+        supabase.table("lost_found_items").update({
+            "status": "CANCELLED"
+        }).eq(
+            "id", item_id
+        ).eq(
+            "user_id", user_id
+        ).execute()
+
+        return redirect("/my-items")
+
+    except Exception:
+        app.logger.exception("Unable to cancel Lost & Found item")
+        return "Unable to cancel item. Please try again.", 500
+
+
 # =========================
 # ADMIN DASHBOARD
 # =========================
@@ -872,6 +964,8 @@ def admin_dashboard():
             report["category_name"] = category_map.get(
                 str(report.get("category_id")), "Other"
             )
+
+            
 
         # Maintenance users only
         maintenance_users = [
