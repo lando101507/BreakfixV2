@@ -93,7 +93,7 @@ def forgot_password():
 
         user = result.data[0]
 
-        # Check email settings
+                # Check email settings
         if not app.config.get("MAIL_USERNAME"):
             raise ValueError("MAIL_USERNAME is missing in .env")
 
@@ -1458,33 +1458,58 @@ def send_reset_email(to_email, reset_url):
     service_id = os.getenv("EMAILJS_SERVICE_ID")
     template_id = os.getenv("EMAILJS_TEMPLATE_ID")
     public_key = os.getenv("EMAILJS_PUBLIC_KEY")
+    private_key = os.getenv("EMAILJS_PRIVATE_KEY")
 
-    if not all([service_id, template_id, public_key]):
-        raise RuntimeError("EmailJS configuration is incomplete")
-
-    response = requests.post(
-        "https://api.emailjs.com/api/v1.0/email/send",
-        json={
-            "service_id": service_id,
-            "template_id": template_id,
-            "user_id": public_key,
-            "template_params": {
-                "to_email": to_email,
-                "reset_url": reset_url
-            }
-        },
-        timeout=15
-    )
-
-    if response.status_code != 200:
-        app.logger.error(
-            "EmailJS error: status=%s body=%s",
-            response.status_code,
-            response.text[:300]
+    # Check EmailJS settings
+    if not all([
+        service_id,
+        template_id,
+        public_key,
+        private_key
+    ]):
+        raise RuntimeError(
+            "EmailJS configuration is incomplete. "
+            "Check the Render environment variables."
         )
-        raise RuntimeError("EmailJS could not send the email")
 
-    app.logger.info("Password reset email accepted by EmailJS.")
+    # Send email through EmailJS
+    try:
+        response = requests.post(
+            "https://api.emailjs.com/api/v1.0/email/send",
+            json={
+                "service_id": service_id,
+                "template_id": template_id,
+                "user_id": public_key,
+                "accessToken": private_key,
+                "template_params": {
+                    "to_email": to_email,
+                    "reset_url": reset_url
+                }
+            },
+            timeout=20
+        )
+
+        if response.status_code != 200:
+            app.logger.error(
+                "EmailJS error: status=%s body=%s",
+                response.status_code,
+                response.text[:300]
+            )
+            raise RuntimeError(
+                "EmailJS could not send the email."
+            )
+
+        app.logger.info(
+            "Password reset email accepted by EmailJS."
+        )
+
+    except requests.RequestException:
+        app.logger.exception(
+            "EmailJS network request failed."
+        )
+        raise RuntimeError(
+            "Unable to connect to the email service."
+        )
 # =========================
 # LOGOUT
 # =========================
