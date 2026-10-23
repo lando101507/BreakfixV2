@@ -1478,8 +1478,9 @@ def send_reset_email(to_email, reset_url):
 
     if response.status_code != 200:
         app.logger.error(
-            "EmailJS failed with HTTP status %s",
-            response.status_code
+            "EmailJS error: status=%s body=%s",
+            response.status_code,
+            response.text[:300]
         )
         raise RuntimeError("EmailJS could not send the email")
 
