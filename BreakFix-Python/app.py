@@ -1455,47 +1455,33 @@ def maintenance_done():
 
 
 def send_reset_email(to_email, reset_url):
-    api_key = os.getenv("RESEND_API_KEY")
-    from_email = os.getenv(
-        "RESEND_FROM_EMAIL",
-        "BreakFix <onboarding@resend.dev>"
-    )
+    service_id = os.getenv("EMAILJS_SERVICE_ID")
+    template_id = os.getenv("EMAILJS_TEMPLATE_ID")
+    public_key = os.getenv("EMAILJS_PUBLIC_KEY")
 
-    if not api_key:
-        raise RuntimeError("RESEND_API_KEY is missing")
+    if not all([service_id, template_id, public_key]):
+        raise RuntimeError("EmailJS configuration is incomplete")
 
     response = requests.post(
-        "https://api.resend.com/emails",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json"
-        },
+        "https://api.emailjs.com/api/v1.0/email/send",
         json={
-            "from": from_email,
-            "to": [to_email],
-            "subject": "BreakFix Password Reset",
-            "html": f"""
-                <h2>BreakFix Password Reset</h2>
-                <p>You requested to reset your password.</p>
-                <p>
-                    <a href="{reset_url}">Reset My Password</a>
-                </p>
-                <p>This link expires in 30 minutes.</p>
-                <p>If you did not request this, ignore this email.</p>
-            """
+            "service_id": service_id,
+            "template_id": template_id,
+            "user_id": public_key,
+            "template_params": {
+                "to_email": to_email,
+                "reset_url": reset_url
+            }
         },
         timeout=15
     )
 
-    if not response.ok:
+    if response.status_code != 200:
         app.logger.error(
-            "Resend API failed: status=%s response=%s",
-            response.status_code,
-            response.text[:500]
+            "EmailJS request failed: HTTP %s",
+            response.status_code
         )
-        raise RuntimeError("Unable to send reset email")
-
-    return response.json()
+        raise RuntimeError("Email service could not send the message")
 
 # =========================
 # LOGOUT
