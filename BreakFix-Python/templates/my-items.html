@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,9 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Items - BreakFix</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/loading.css') }}">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/loading.css') }}">
 
     <style>
         .page-header {
@@ -161,6 +165,87 @@
             margin-top: 15px;
         }
 
+        .item-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .item-actions form {
+            margin: 0;
+        }
+
+        .item-actions button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .edit-item-btn {
+            background: #2563eb;
+            color: white;
+        }
+
+        .edit-item-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel-item-btn {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .cancel-item-btn:hover {
+            background: #fecaca;
+        }
+
+        .edit-item-form {
+            margin-top: 16px;
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .edit-item-form[hidden] {
+            display: none;
+        }
+
+        .edit-item-form h4 {
+            margin: 0 0 14px;
+        }
+
+        .edit-item-form label {
+            display: block;
+            margin: 12px 0 6px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .edit-item-form input,
+        .edit-item-form textarea {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font: inherit;
+        }
+
+        .edit-item-form textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
         .empty-state {
             background: white;
             border-radius: 16px;
@@ -194,9 +279,8 @@
             margin-bottom: 22px;
         }
 
-        /* =========================
-           LOGOUT CONFIRMATION MODAL
-        ========================= */
+        /* LOGOUT MODAL */
+
         .logout-modal {
             position: fixed;
             inset: 0;
@@ -205,8 +289,9 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            background: rgba(3, 10, 22, 0.8);
-            backdrop-filter: blur(6px);
+            background: rgba(5, 12, 28, 0.82);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .logout-modal.show {
@@ -215,42 +300,39 @@
 
         .logout-modal-content {
             width: 100%;
-            max-width: 400px;
-            padding: 32px 26px;
-            border: 1px solid transparent;
-            border-radius: 20px;
-            background:
-                linear-gradient(#091728, #091728) padding-box,
-                linear-gradient(135deg, #00e5ff, #7c3aed) border-box;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 420px;
+            padding: 32px 30px;
+            border: 2px solid #3b82f6;
+            border-radius: 24px;
+            background: #111827;
             color: white;
             text-align: center;
-            animation: modalPop 0.2s ease-out;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
         }
 
         .logout-icon {
-            width: 60px;
-            height: 60px;
+            width: 62px;
+            height: 62px;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 auto 18px;
-            border-radius: 50%;
-            background: rgba(0, 229, 255, 0.12);
-            color: #00e5ff;
-            font-size: 28px;
+            margin: 0 auto 20px;
+            border-radius: 18px;
+            background: rgba(37, 99, 235, 0.15);
+            color: #60a5fa;
+            font-size: 29px;
         }
 
         .logout-modal-content h2 {
             margin: 0 0 12px;
-            font-size: 23px;
+            font-size: 24px;
         }
 
         .logout-modal-content p {
             margin: 0 0 25px;
-            color: #aab8c9;
-            font-size: 14px;
-            line-height: 1.7;
+            color: #9caec6;
+            font-size: 13px;
+            line-height: 1.8;
         }
 
         .logout-buttons {
@@ -261,149 +343,43 @@
         .logout-buttons button,
         .logout-buttons a {
             flex: 1;
+            min-height: 46px;
             display: flex;
             justify-content: center;
             align-items: center;
+            gap: 7px;
             padding: 12px 10px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
             text-decoration: none;
             cursor: pointer;
-            transition: 0.2s;
         }
 
         .logout-buttons .cancel-btn {
-            border: 1px solid #34445a;
-            background: #152d49;
-            color: white;
-        }
-
-        .logout-buttons .cancel-btn:hover {
-            border-color: #00e5ff;
+            border: 1px solid #334155;
+            background: #111b2b;
+            color: #cbd5e1;
         }
 
         .logout-buttons .confirm-logout-btn {
             border: none;
-            background: linear-gradient(135deg, #00e5ff, #a78bfa);
-            color: #07111f;
+            background: #2864ed;
+            color: white;
         }
 
-        .logout-buttons .confirm-logout-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 18px rgba(0, 229, 255, 0.2);
-        }
-
-        @keyframes modalPop {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        /* =========================
-           RESPONSIVE DESIGN
-        ========================= */
-        @media (max-width: 1000px) {
-            .sidebar {
-                width: 205px;
-            }
-
-            .main {
-                margin-left: 205px;
-                padding: 22px;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-        }
-
-        @media (max-width: 650px) {
-            .sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-                padding: 18px;
-            }
-
-            .logo {
-                padding-bottom: 15px;
-            }
-
-            .profile,
-            .nav-title {
-                display: none;
-            }
-
-            .sidebar nav {
-                flex-direction: row;
-                flex-wrap: wrap;
-            }
-
-            .nav-link {
-                padding: 10px;
-                margin-right: 5px;
-            }
-
-            .sidebar-bottom {
-                margin-top: 5px;
-                padding-top: 0;
-            }
-
-            .main {
-                margin-left: 0;
-                padding: 18px 12px;
-            }
-
-            .topbar {
+        @media (max-width: 600px) {
+            .page-header {
                 align-items: flex-start;
                 flex-direction: column;
             }
 
-            .topbar h1 {
-                font-size: 23px;
-            }
-
-            .stats {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
-            }
-
-            .stat-card {
-                padding: 15px;
-            }
-
-            .stat-top {
-                align-items: flex-start;
-                flex-direction: column-reverse;
-            }
-
-            .stat-number {
-                font-size: 25px;
-            }
-
-            .welcome {
-                padding: 22px;
-            }
-        }
-
-        @media (max-width: 360px) {
-            .stats {
+            .items-grid {
                 grid-template-columns: 1fr;
             }
 
             .logout-modal-content {
-                padding: 26px 18px;
-            }
-
-            .logout-buttons {
-                flex-direction: column;
+                padding: 28px 22px;
             }
         }
     </style>
@@ -411,22 +387,17 @@
 
 <body>
 
-    <!-- =========================
-         BREAKFIX LOADING SCREEN
-    ========================== -->
+    <!-- BREAKFIX LOADING SCREEN -->
     <div id="breakfix-loader">
         <div class="breakfix-loader-logo">
             <div class="breakfix-loader-ring"></div>
-
             <div class="loader-icon">
                 <i class="bi bi-tools"></i>
             </div>
         </div>
 
         <h2 class="breakfix-loader-title">BreakFix</h2>
-
         <div class="breakfix-loader-bar"></div>
-
         <p class="breakfix-loader-text">Loading BreakFix...</p>
 
         <div class="breakfix-loader-dots">
@@ -436,210 +407,285 @@
         </div>
     </div>
 
-<div class="dashboard-layout">
+    <div class="dashboard-layout">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
 
-        <div class="logo">
-            <i class="bi bi-tools"></i>
-            <span>BreakFix</span>
-        </div>
-
-        <div class="user-card">
-            <div class="user-icon">
-                <i class="bi bi-person-fill"></i>
+            <div class="logo">
+                <i class="bi bi-tools"></i>
+                <span>BreakFix</span>
             </div>
 
-            <div>
-                <strong>{{ fullname }}</strong>
-                <small>{{ role|capitalize }}</small>
-            </div>
-        </div>
-
-        <nav class="sidebar-nav">
-
-            <a href="/dashboard">
-                <i class="bi bi-grid-1x2-fill"></i>
-                Dashboard
-            </a>
-
-            <a href="/report-problem">
-                <i class="bi bi-exclamation-circle-fill"></i>
-                Report Problem
-            </a>
-
-            <a href="/my-reports">
-                <i class="bi bi-file-earmark-text-fill"></i>
-                My Reports
-            </a>
-
-            <a href="/lost-found">
-                <i class="bi bi-search"></i>
-                Lost &amp; Found
-            </a>
-
-            <a href="/my-items" class="active">
-                <i class="bi bi-box-seam-fill"></i>
-                My Items
-            </a>
-
-        </nav>
-
-        <div class="sidebar-bottom">
-            <!-- Open confirmation instead of logging out immediately -->
-            <a href="#" class="logout" onclick="openLogoutModal(event)">
-                <i class="bi bi-box-arrow-left"></i>
-                Logout
-            </a>
-        </div>
-
-    </aside>
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-
-        <header class="topbar">
-            <div>
-                <h2>My Items</h2>
-                <p>Track your Lost &amp; Found submissions</p>
-            </div>
-
-            <div class="system-status">
-                <span></span>
-                System Online
-            </div>
-        </header>
-
-        <section class="content">
-
-            <div class="page-header">
-                <div>
-                    <h2>My Lost &amp; Found Items</h2>
-                    <p>View the items you have reported as lost or found.</p>
+            <div class="user-card">
+                <div class="user-icon">
+                    <i class="bi bi-person-fill"></i>
                 </div>
 
-                <a href="/lost-found" class="new-item-btn">
-                    <i class="bi bi-plus-lg"></i>
-                    Report Item
+                <div>
+                    <strong>{{ fullname }}</strong>
+                    <small>{{ role|capitalize }}</small>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/dashboard">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    Dashboard
+                </a>
+
+                <a href="/report-problem">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    Report Problem
+                </a>
+
+                <a href="/my-reports">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    My Reports
+                </a>
+
+                <a href="/lost-found">
+                    <i class="bi bi-search"></i>
+                    Lost &amp; Found
+                </a>
+
+                <a href="/my-items" class="active">
+                    <i class="bi bi-box-seam-fill"></i>
+                    My Items
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="#" class="logout"
+                   onclick="openLogoutModal(event)">
+                    <i class="bi bi-box-arrow-left"></i>
+                    Logout
                 </a>
             </div>
 
-            {% if items %}
+        </aside>
 
-                <div class="items-grid">
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
 
-                    {% for item in items %}
+            <header class="topbar">
+                <div>
+                    <h2>My Items</h2>
+                    <p>Track your Lost &amp; Found submissions</p>
+                </div>
 
-                        <div class="item-card">
+                <div class="system-status">
+                    <span></span>
+                    System Online
+                </div>
+            </header>
 
-                            <div class="item-top">
+            <section class="content">
 
-                                <span class="report-code">
-                                    {{ item.report_code }}
-                                </span>
+                <div class="page-header">
+                    <div>
+                        <h2>My Lost &amp; Found Items</h2>
+                        <p>View the items you have reported as lost or found.</p>
+                    </div>
 
-                                {% if item.status == "LOST" %}
-                                    <span class="type-badge lost">LOST</span>
+                    <a href="/lost-found" class="new-item-btn">
+                        <i class="bi bi-plus-lg"></i>
+                        Report Item
+                    </a>
+                </div>
 
-                                {% elif item.status == "FOUND" %}
-                                    <span class="type-badge found">FOUND</span>
+                {% if items %}
 
-                                {% elif item.status == "CLAIMED" %}
-                                    <span class="type-badge claimed">CLAIMED</span>
+                    <div class="items-grid">
 
-                                {% else %}
-                                    <span class="type-badge cancelled">
-                                        {{ item.status }}
+                        {% for item in items %}
+
+                            <div class="item-card">
+
+                                <div class="item-top">
+                                    <span class="report-code">
+                                        {{ item.report_code }}
                                     </span>
+
+                                    {% if item.status == "LOST" %}
+                                        <span class="type-badge lost">LOST</span>
+                                    {% elif item.status == "FOUND" %}
+                                        <span class="type-badge found">FOUND</span>
+                                    {% elif item.status == "CLAIMED" %}
+                                        <span class="type-badge claimed">CLAIMED</span>
+                                    {% else %}
+                                        <span class="type-badge cancelled">
+                                            {{ item.status }}
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                                <h3>{{ item.item_name }}</h3>
+
+                                <div class="item-info">
+                                    <div class="info-row">
+                                        <i class="bi bi-tag-fill"></i>
+                                        <span>{{ item.category }}</span>
+                                    </div>
+
+                                    <div class="info-row">
+                                        <i class="bi bi-geo-alt-fill"></i>
+                                        <span>{{ item.location }}</span>
+                                    </div>
+
+                                    <div class="info-row">
+                                        <i class="bi bi-calendar3"></i>
+                                        <span>{{ item.created_at[:10] }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="description">
+                                    <strong>
+                                        <i class="bi bi-chat-left-text"></i>
+                                        Description
+                                    </strong>
+                                    {{ item.description }}
+                                </div>
+
+                                {% if item.photo %}
+                                    <img
+                                        src="{{ item.photo }}"
+                                        class="item-photo"
+                                        alt="Lost or found item">
+                                {% endif %}
+
+                                <!-- EDIT AND CANCEL -->
+                                {% if item.status in ["LOST", "FOUND"] %}
+
+                                    <div class="item-actions">
+                                        <button
+                                            type="button"
+                                            class="edit-item-btn"
+                                            onclick="toggleEditForm('{{ item.id }}')">
+                                            <i class="bi bi-pencil-square"></i>
+                                            Edit
+                                        </button>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ url_for('cancel_my_item', item_id=item.id) }}"
+                                            onsubmit="return confirm('Are you sure you want to cancel this report?');">
+
+                                            <button type="submit"
+                                                    class="cancel-item-btn">
+                                                <i class="bi bi-x-circle"></i>
+                                                Cancel Report
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- EDIT FORM -->
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for('edit_my_item', item_id=item.id) }}"
+                                        id="edit-form-{{ item.id }}"
+                                        class="edit-item-form"
+                                        hidden>
+
+                                        <h4>Edit Lost &amp; Found Item</h4>
+
+                                        <label for="item-name-{{ item.id }}">
+                                            Item Name
+                                        </label>
+                                        <input
+                                            id="item-name-{{ item.id }}"
+                                            type="text"
+                                            name="item_name"
+                                            value="{{ item.item_name }}"
+                                            required>
+
+                                        <label for="item-category-{{ item.id }}">
+                                            Category
+                                        </label>
+                                        <input
+                                            id="item-category-{{ item.id }}"
+                                            type="text"
+                                            name="category"
+                                            value="{{ item.category }}"
+                                            required>
+
+                                        <label for="item-location-{{ item.id }}">
+                                            Location
+                                        </label>
+                                        <input
+                                            id="item-location-{{ item.id }}"
+                                            type="text"
+                                            name="location"
+                                            value="{{ item.location }}"
+                                            required>
+
+                                        <label for="item-description-{{ item.id }}">
+                                            Description
+                                        </label>
+                                        <textarea
+                                            id="item-description-{{ item.id }}"
+                                            name="description"
+                                            required>{{ item.description or '' }}</textarea>
+
+                                        <div class="item-actions">
+                                            <button
+                                                type="submit"
+                                                class="edit-item-btn">
+                                                <i class="bi bi-check-circle"></i>
+                                                Save Changes
+                                            </button>
+
+                                            <button
+                                                type="button"
+                                                class="cancel-item-btn"
+                                                onclick="toggleEditForm('{{ item.id }}')">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </form>
+
                                 {% endif %}
 
                             </div>
 
-                            <h3>{{ item.item_name }}</h3>
+                        {% endfor %}
 
-                            <div class="item-info">
-
-                                <div class="info-row">
-                                    <i class="bi bi-tag-fill"></i>
-                                    <span>{{ item.category }}</span>
-                                </div>
-
-                                <div class="info-row">
-                                    <i class="bi bi-geo-alt-fill"></i>
-                                    <span>{{ item.location }}</span>
-                                </div>
-
-                                <div class="info-row">
-                                    <i class="bi bi-calendar3"></i>
-                                    <span>{{ item.created_at[:10] }}</span>
-                                </div>
-
-                            </div>
-
-                            <div class="description">
-                                <strong>
-                                    <i class="bi bi-chat-left-text"></i>
-                                    Description
-                                </strong>
-
-                                {{ item.description }}
-                            </div>
-
-                            {% if item.photo %}
-                                <img
-                                    src="{{ item.photo }}"
-                                    class="item-photo"
-                                    alt="Lost or found item">
-                            {% endif %}
-
-                        </div>
-
-                    {% endfor %}
-
-                </div>
-
-            {% else %}
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        <i class="bi bi-box-seam"></i>
                     </div>
 
-                    <h3>No Items Yet</h3>
+                {% else %}
 
-                    <p>
-                        You have not submitted any Lost &amp; Found items.
-                    </p>
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="bi bi-box-seam"></i>
+                        </div>
 
-                    <a href="/lost-found" class="empty-btn">
-                        <i class="bi bi-plus-circle-fill"></i>
-                        Report Lost or Found Item
-                    </a>
+                        <h3>No Items Yet</h3>
 
-                </div>
+                        <p>
+                            You have not submitted any Lost &amp; Found items.
+                        </p>
 
-            {% endif %}
+                        <a href="/lost-found" class="empty-btn">
+                            <i class="bi bi-plus-circle-fill"></i>
+                            Report Lost or Found Item
+                        </a>
+                    </div>
 
-        </section>
+                {% endif %}
 
-    </main>
+            </section>
+        </main>
+    </div>
 
-</div>
-
-<!-- =========================
-         LOGOUT CONFIRMATION MODAL
-    ========================== -->
+    <!-- LOGOUT CONFIRMATION MODAL -->
     <div
         id="logoutModal"
         class="logout-modal"
         role="dialog"
         aria-modal="true"
         aria-labelledby="logoutTitle"
-        aria-describedby="logoutDescription"
-        aria-hidden="true"
-    >
+        aria-hidden="true">
+
         <div class="logout-modal-content">
 
             <div class="logout-icon">
@@ -648,7 +694,7 @@
 
             <h2 id="logoutTitle">Confirm Logout</h2>
 
-            <p id="logoutDescription">
+            <p>
                 Are you sure you want to log out of your BreakFix account?
             </p>
 
@@ -656,8 +702,7 @@
                 <button
                     type="button"
                     class="cancel-btn"
-                    onclick="closeLogoutModal()"
-                >
+                    onclick="closeLogoutModal()">
                     Cancel
                 </button>
 
@@ -665,68 +710,62 @@
                     Yes, Logout
                 </a>
             </div>
+
+        </div>
     </div>
 
-</div>
+    <!-- JAVASCRIPT -->
+    <script>
+        function toggleEditForm(itemId) {
+            const form = document.getElementById("edit-form-" + itemId);
 
-<!-- LOGOUT MODAL JAVASCRIPT -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const logoutModal = document.getElementById("logoutModal");
-
-        window.openLogoutModal = function (event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
+            if (form) {
+                form.hidden = !form.hidden;
             }
-
-            if (!logoutModal) {
-                console.error("Logout modal was not found.");
-                return;
-            }
-
-            logoutModal.classList.add("show");
-            logoutModal.setAttribute("aria-hidden", "false");
-
-            const cancelButton = logoutModal.querySelector(".cancel-btn");
-
-            if (cancelButton) {
-                cancelButton.focus();
-            }
-        };
-
-        window.closeLogoutModal = function () {
-            if (!logoutModal) {
-                return;
-            }
-
-            logoutModal.classList.remove("show");
-            logoutModal.setAttribute("aria-hidden", "true");
-        };
-
-        // Close when clicking the dark background
-        if (logoutModal) {
-            logoutModal.addEventListener("click", function (event) {
-                if (event.target === logoutModal) {
-                    window.closeLogoutModal();
-                }
-            });
         }
 
-        // Close when pressing Escape
-        document.addEventListener("keydown", function (event) {
-            if (
-                event.key === "Escape" &&
-                logoutModal &&
-                logoutModal.classList.contains("show")
-            ) {
-                window.closeLogoutModal();
+        function openLogoutModal(event) {
+            if (event) {
+                event.preventDefault();
             }
-        });
 
-    });
-</script>
-<script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+            const modal = document.getElementById("logoutModal");
+
+            if (modal) {
+                modal.classList.add("show");
+                modal.setAttribute("aria-hidden", "false");
+            }
+        }
+
+        function closeLogoutModal() {
+            const modal = document.getElementById("logoutModal");
+
+            if (modal) {
+                modal.classList.remove("show");
+                modal.setAttribute("aria-hidden", "true");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const modal = document.getElementById("logoutModal");
+
+            if (modal) {
+                modal.addEventListener("click", function (event) {
+                    if (event.target === modal) {
+                        closeLogoutModal();
+                    }
+                });
+            }
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closeLogoutModal();
+                }
+            });
+        });
+    </script>
+
+    <script src="{{ url_for('static', filename='js/loading.js') }}"></script>
+
 </body>
 </html>
