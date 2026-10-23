@@ -3,3 +3,4 @@ Flask-Mail
 supabase
 python-dotenv
 gunicorn
+requests
