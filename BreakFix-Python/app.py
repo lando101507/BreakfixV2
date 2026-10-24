@@ -760,6 +760,7 @@ def lost_found():
     )
 
 
+
 # =========================
 # MY ITEMS
 # =========================
@@ -778,7 +779,8 @@ def my_items():
             .table("lost_found_items")
             .select(
                 "id,report_code,item_type,item_name,category,"
-                "location,description,photo,status,created_at"
+                "location,description,photo,status,created_at,"
+                "admin_notes"
             )
             .eq("user_id", user_id)
             .order("created_at", desc=True)
@@ -795,6 +797,7 @@ def my_items():
         )
 
     except Exception as e:
+        app.logger.exception("Unable to load My Items")
         return f"""
         <h2>Unable to load My Items</h2>
         <p>Error: {e}</p>
@@ -1339,6 +1342,51 @@ def admin_update_lost_found_status():
         app.logger.exception("Failed to update Lost & Found status")
         return redirect("/admin/lost-found?error=Update+failed.+Check+Flask+Terminal")
 
+    # =========================
+# SAVE LOST & FOUND ADMIN NOTES
+# =========================
+
+@app.route("/admin/lost-found/update-notes", methods=["POST"])
+def admin_update_lost_found_notes():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    if session.get("role") != "admin":
+        return redirect("/login")
+
+    item_id = request.form.get("item_id", "").strip()
+    admin_notes = request.form.get("admin_notes", "").strip()
+
+    if not item_id:
+        return redirect("/admin/lost-found?error=Invalid+item")
+
+    if len(admin_notes) > 3000:
+        return redirect("/admin/lost-found?error=Notes+too+long")
+
+    try:
+        check_result = (
+            supabase.table("lost_found_items")
+            .select("id")
+            .eq("id", item_id)
+            .limit(1)
+            .execute()
+        )
+
+        if not check_result.data:
+            return redirect("/admin/lost-found?error=Item+not+found")
+
+        supabase.table("lost_found_items").update({
+            "admin_notes": admin_notes
+        }).eq("id", item_id).execute()
+
+        return redirect("/admin/lost-found?notes_updated=1")
+
+    except Exception:
+        app.logger.exception("Failed to save Lost & Found admin notes")
+        return redirect(
+            "/admin/lost-found?error=Failed+to+save+notes"
+        )
 
 
 # =========================
