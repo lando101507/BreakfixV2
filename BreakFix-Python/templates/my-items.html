@@ -279,111 +279,224 @@
             margin-bottom: 22px;
         }
 
-        /* LOGOUT MODAL */
+        /* =========================
+   LOGOUT CONFIRMATION MODAL
+========================= */
 
-        .logout-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            background: rgba(5, 12, 28, 0.82);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
+.logout-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 
-        .logout-modal.show {
-            display: flex;
-        }
+    background: rgba(5, 12, 28, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
 
-        .logout-modal-content {
-            width: 100%;
-            max-width: 420px;
-            padding: 32px 30px;
-            border: 2px solid #3b82f6;
-            border-radius: 24px;
-            background: #111827;
-            color: white;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
+.logout-modal.show {
+    display: flex;
+}
 
-        .logout-icon {
-            width: 62px;
-            height: 62px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 20px;
-            border-radius: 18px;
-            background: rgba(37, 99, 235, 0.15);
-            color: #60a5fa;
-            font-size: 29px;
-        }
+.logout-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 30px;
 
-        .logout-modal-content h2 {
-            margin: 0 0 12px;
-            font-size: 24px;
-        }
+    border: 2px solid transparent;
+    border-radius: 24px;
 
-        .logout-modal-content p {
-            margin: 0 0 25px;
-            color: #9caec6;
-            font-size: 13px;
-            line-height: 1.8;
-        }
+    background:
+        linear-gradient(#111827, #111827) padding-box,
+        linear-gradient(
+            135deg,
+            #a855f7,
+            #ec4899,
+            #06b6d4,
+            #facc15,
+            #a855f7
+        ) border-box;
 
-        .logout-buttons {
-            display: flex;
-            gap: 12px;
-        }
+    background-size: auto, 300% 300%;
+    animation: logoutBorderGlow 6s ease infinite,
+               logoutModalPop 0.25s ease-out;
 
-        .logout-buttons button,
-        .logout-buttons a {
-            flex: 1;
-            min-height: 46px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 7px;
-            padding: 12px 10px;
-            border-radius: 12px;
-            font-size: 13px;
-            font-weight: 700;
-            text-decoration: none;
-            cursor: pointer;
-        }
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    text-align: center;
+}
 
-        .logout-buttons .cancel-btn {
-            border: 1px solid #334155;
-            background: #111b2b;
-            color: #cbd5e1;
-        }
+@keyframes logoutBorderGlow {
+    0% {
+        background-position: 0 0, 0% 50%;
+    }
 
-        .logout-buttons .confirm-logout-btn {
-            border: none;
-            background: #2864ed;
-            color: white;
-        }
+    50% {
+        background-position: 0 0, 100% 50%;
+    }
 
-        @media (max-width: 600px) {
-            .page-header {
-                align-items: flex-start;
-                flex-direction: column;
-            }
+    100% {
+        background-position: 0 0, 0% 50%;
+    }
+}
 
-            .items-grid {
-                grid-template-columns: 1fr;
-            }
+@keyframes logoutModalPop {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+    }
 
-            .logout-modal-content {
-                padding: 28px 22px;
-            }
-        }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.logout-icon {
+    width: 62px;
+    height: 62px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+
+    border-radius: 18px;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+
+    color: #60a5fa;
+    font-size: 29px;
+}
+
+.logout-modal-content h2 {
+    margin: 0 0 12px;
+    font-size: 24px;
+    font-weight: 750;
+}
+
+.logout-modal-content p {
+    margin: 0 0 25px;
+    color: #9caec6;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.logout-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.logout-buttons button,
+.logout-buttons a {
+    flex: 1;
+    min-height: 46px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+
+    padding: 12px 10px;
+    border-radius: 12px;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+
+    transition: 0.25s ease;
+}
+
+.logout-buttons .cancel-btn {
+    border: 1px solid #334155;
+    background: #111b2b;
+    color: #cbd5e1;
+}
+
+.logout-buttons .cancel-btn:hover {
+    border-color: #64748b;
+    background: #1e293b;
+}
+
+.logout-buttons .confirm-logout-btn {
+    border: none;
+    background: #2864ed;
+    color: #ffffff;
+}
+
+.logout-buttons .confirm-logout-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 7px 20px rgba(37, 99, 235, 0.25);
+}
+
+.logout-buttons button:focus-visible,
+.logout-buttons a:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+    .logout-modal-content {
+        padding: 28px 22px;
+        border-radius: 21px;
+    }
+
+    .logout-modal-content h2 {
+        font-size: 22px;
+    }
+
+    .logout-buttons {
+        gap: 9px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logout-modal-content {
+        animation: none;
+    }
+
+    .logout-buttons button,
+    .logout-buttons a {
+        transition: none;
+    }
+}
+
+/* ADMIN NOTE VISIBLE TO EMPLOYEE */
+.employee-admin-note {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-left: 4px solid #2563eb;
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+}
+
+.employee-admin-note h4 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    color: #1d4ed8;
+    font-size: 14px;
+}
+
+.employee-admin-note p {
+    margin: 0;
+    color: #334155;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
     </style>
 </head>
+
 
 <body>
 
@@ -547,12 +660,25 @@
                                     {{ item.description }}
                                 </div>
 
+                                <!-- ADMIN NOTE / CLAIM INSTRUCTIONS -->
+{% if item.get('admin_notes') %}
+    <div class="employee-admin-note">
+        <h4>
+            <i class="bi bi-info-circle-fill"></i>
+            Admin Update
+        </h4>
+
+        <p>{{ item.get('admin_notes') }}</p>
+    </div>
+{% endif %}
+
                                 {% if item.photo %}
                                     <img
                                         src="{{ item.photo }}"
                                         class="item-photo"
                                         alt="Lost or found item">
                                 {% endif %}
+
 
                                 <!-- EDIT AND CANCEL -->
                                 {% if item.status in ["LOST", "FOUND"] %}
