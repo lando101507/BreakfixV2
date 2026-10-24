@@ -739,6 +739,65 @@
     }
 }
 
+.admin-notes-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 12px;
+}
+
+.admin-notes-box .description-label {
+    color: #1d4ed8;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.admin-notes-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-notes-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: white;
+    font: inherit;
+    font-size: 13px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.admin-notes-form textarea:focus {
+    outline: 2px solid #93c5fd;
+    border-color: #2563eb;
+}
+
+.admin-notes-form button {
+    align-self: flex-end;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 9px;
+    background: #2563eb;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.admin-notes-form button:hover {
+    background: #1d4ed8;
+}
+
+@media (max-width: 420px) {
+    .admin-notes-form button {
+        width: 100%;
+    }
+}
+
     </style>
 </head>
 
@@ -976,6 +1035,43 @@
                         <span class="description-label">DESCRIPTION</span>
                         {{ item.get('description') or 'No description provided.' }}
                     </div>
+
+                    <!-- ADMIN NOTES -->
+<div class="admin-notes-box">
+    <label class="description-label" for="notes-{{ item.get('id') }}">
+        <i class="bi bi-clipboard-check"></i>
+        ADMIN NOTES / CLAIM INSTRUCTIONS
+    </label>
+
+    <form
+        action="{{ url_for('admin_update_lost_found_notes') }}"
+        method="POST"
+        class="admin-notes-form"
+    >
+        <input
+            type="hidden"
+            name="item_id"
+            value="{{ item.get('id') }}"
+        >
+
+        <textarea
+            id="notes-{{ item.get('id') }}"
+            name="admin_notes"
+            maxlength="3000"
+            rows="3"
+            placeholder="Example: Your item is now available at the Admin Office. Please claim it and present your report code for verification."
+        >{{ item.get('admin_notes') or '' }}</textarea>
+
+        <button type="submit">
+            <i class="bi bi-save"></i> Save Note
+        </button>
+    </form>
+</div>
+
+<div class="description">
+    <span class="description-label">DESCRIPTION</span>
+    {{ item.get('description') or 'No description provided.' }}
+</div>
 
                     <div class="status-section">
 
